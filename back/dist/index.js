@@ -1,12 +1,12 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+const data_source_1 = require("./config/data-source");
+const envs_1 = require("./config/envs");
 const server_1 = require("./server");
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
-const PORT = process.env.PORT || 3000;
-server_1.app.listen(PORT, () => {
-    console.log(`server on port ${PORT}`);
+require("reflect-metadata");
+data_source_1.AppDataSource.initialize().then(() => {
+    console.log('Conexion a la base de datos con exito');
+    server_1.app.listen(envs_1.PORT, () => {
+        console.log(`server on port ${envs_1.PORT}`);
+    });
 });

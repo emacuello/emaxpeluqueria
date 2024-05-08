@@ -1,12 +1,14 @@
 import Carousel from 'react-bootstrap/Carousel';
 import styles from './LandingPage.module.css';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 const LandingPage = () => {
 	return (
 		<>
 			<div className={styles.divContainer}>
 				<Carousel fade>
 					<Carousel.Item>
-						<img
+						<LazyLoadImage
 							className={styles.imgCarrousel}
 							src="https://i.ibb.co/rcbGFMT/Peluqueria1.jpg"
 							alt="Peluqueria1"
@@ -19,7 +21,7 @@ const LandingPage = () => {
 						</Carousel.Caption>
 					</Carousel.Item>
 					<Carousel.Item>
-						<img
+						<LazyLoadImage
 							className={styles.imgCarrousel}
 							src="https://i.ibb.co/FXzp6ms/Peluqueria2.jpg"
 							alt="Peluqueria2"
@@ -32,7 +34,7 @@ const LandingPage = () => {
 						</Carousel.Caption>
 					</Carousel.Item>
 					<Carousel.Item>
-						<img
+						<LazyLoadImage
 							className={styles.imgCarrousel}
 							src="https://i.ibb.co/2dN6hcC/Peluqueria3.jpg"
 							alt="Peluqueria3"
@@ -50,7 +52,7 @@ const LandingPage = () => {
 				Transforma tu estilo, eleva tu confianza: donde el arte se
 				encuentra con la belleza en cada corte.
 				<div>
-					<img
+					<LazyLoadImage
 						src="https://i.ibb.co/stDtVXC/Logo-Emax-Peluqueria-Actualizado.png"
 						alt=""
 					/>
@@ -65,7 +67,7 @@ const LandingPage = () => {
 						excelencia y la atención personalizada.
 					</div>
 					<div className="col-sm-6">
-						<img
+						<LazyLoadImage
 							className={styles.imgLeyends}
 							src="https://i.ibb.co/qdpvHQX/jeppe-monster-GOj-F1v-XObrg-unsplash.jpg"
 							alt=""
