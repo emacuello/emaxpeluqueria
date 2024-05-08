@@ -1,0 +1,73 @@
+.AuthFormContainer {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	height: 100vh;
+}
+
+.AuthForm {
+	width: 420px;
+	box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
+	padding-top: 30px;
+	padding-bottom: 20px;
+	border-radius: 12px;
+	background-color: hsla(284, 69%, 71%, 0.05);
+}
+
+.AuthFormContent {
+	padding-left: 12%;
+	padding-right: 12%;
+}
+
+.AuthFormTitle {
+	text-align: center;
+	margin-bottom: 1em;
+	font-size: 24px;
+	color: rgb(204, 193, 193);
+	font-weight: 800;
+}
+
+label {
+	font-size: 14px;
+	font-weight: 600;
+	color: rgb(204, 193, 193);
+}
+
+.btn {
+	background-color: hsl(331, 69%, 32%, 30%);
+	border: #cc82e8;
+	color: #cc82e8;
+	border-radius: 10px;
+	height: 40px;
+	font-weight: bold !important;
+}
+
+.btn:hover {
+	background-color: #0d0310;
+	border: #0d0310;
+	color: #cc82e8;
+}
+
+.input {
+	background-color: inherit !important;
+}
+
+.a {
+	color: #d72850;
+	text-decoration: none !important;
+}
+
+.a:hover {
+	color: #cc82e8;
+	font-weight: bold !important;
+}
+
+p,
+h3 {
+	cursor: default;
+}
+
+.inputLogin:hover {
+	background-color: hsl(331, 69%, 32%, 30%) !important;
+	transform: scale(1.01);
+}

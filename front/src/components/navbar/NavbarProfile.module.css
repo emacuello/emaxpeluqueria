@@ -1,0 +1,32 @@
+.img {
+	width: 50px;
+	height: 50px;
+}
+
+.img:hover {
+	cursor: pointer;
+}
+
+.btn {
+	background-color: inherit !important;
+}
+
+.newbg button {
+	background-color: inherit !important;
+	border: 0px !important;
+	border-color: inherit !important;
+}
+
+.dropdown {
+	background-color: inherit !important;
+}
+
+.a {
+	color: azure !important;
+	text-decoration: none !important;
+	font-weight: bold !important;
+}
+.dropdown a:hover {
+	color: rgb(215, 40, 80) !important;
+	background-color: inherit !important;
+}

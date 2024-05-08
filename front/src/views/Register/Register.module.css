@@ -1,0 +1,39 @@
+.form {
+	background-color: hsla(284, 69%, 71%, 0.05);
+	margin-top: 5%;
+	margin-bottom: 5%;
+	padding-top: 1%;
+	padding-bottom: 3%;
+	border-radius: 20px;
+}
+
+.btn {
+	background-color: hsl(331, 69%, 32%, 30%) !important;
+	border: #cc82e8 !important;
+	color: #cc82e8 !important;
+	border-radius: 10px !important;
+	height: 40px !important;
+	font-weight: bold !important;
+}
+
+.btn:hover {
+	background-color: #0d0310 !important;
+	border: #0d0310 !important;
+	color: #cc82e8 !important;
+}
+
+.input {
+	background-color: inherit !important;
+}
+.input:hover {
+	background-color: hsl(331, 69%, 32%, 30%) !important;
+}
+
+.labelColor {
+	color: #cc82e8;
+}
+
+.customCheckbox input[type='checkbox']:checked {
+	background: hsl(331, 69%, 32%, 30%) !important;
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e") !important;
+}

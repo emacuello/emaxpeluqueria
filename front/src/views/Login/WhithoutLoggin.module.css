@@ -1,0 +1,50 @@
+.warning {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-size: 3rem;
+	color: rgb(215, 40, 80);
+	margin-top: 2rem;
+}
+
+.warning:hover {
+	cursor: default;
+}
+.login {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-size: 2rem;
+	margin-top: 2rem;
+}
+
+.a {
+	text-decoration: none;
+	color: rgb(113, 43, 60);
+	transition: all 0.5s ease;
+}
+
+.a:hover {
+	color: rgb(136, 25, 78);
+	transform: scale(1.1);
+}
+
+.register {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-size: 2rem;
+	margin-top: 2rem;
+	color: rgb(215, 40, 80);
+}
+
+.register:hover {
+	cursor: default;
+}
+
+.bot {
+	margin-bottom: 5rem;
+}

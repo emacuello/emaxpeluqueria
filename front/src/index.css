@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400');
+/* Reset CSS */
+
+/* Box-sizing reset */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+:root {
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove default margin and padding */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+dl,
+dd,
+figure,
+blockquote,
+fieldset,
+legend {
+	margin: 0;
+	padding: 0;
+}
+
+/* Remove default list styles */
+ul,
+ol {
+	list-style: none;
+}
+
+/* Set base font size and line height */
+body {
+	font-family: 'poppins' !important; /* Cambia a la fuente deseada */
+	font-size: 16px; /* Cambia al tamaño de fuente deseado */
+	line-height: 1.5;
+	background: #0d0310 !important;
+}
+
+/* Remove border and outline on focused elements */
+button,
+input,
+select,
+textarea {
+	outline: none;
+	border: none;
+}
+
+/* Other resets as needed */

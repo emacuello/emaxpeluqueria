@@ -1,0 +1,69 @@
+.tittle {
+	margin-top: 2rem;
+	color: azure;
+	font-size: 2rem;
+	font-weight: 500;
+	transition: all 0.5s ease;
+}
+
+.tittle:hover {
+	cursor: default;
+	transform: scale(1.02);
+	color: antiquewhite;
+}
+
+.Accordion {
+	background-color: hsla(284, 69%, 71%, 0.05) !important;
+}
+
+.containerBtn {
+	display: flex;
+	justify-content: flex-end !important;
+}
+
+.btn {
+	background-color: #88194e;
+	border: #cc82e8;
+	color: #e77eb1;
+	border-radius: 10px;
+	height: 40px;
+	font-weight: bold !important;
+	transition: all 0.5s ease;
+	font-weight: bold !important;
+	border-radius: 16px;
+}
+.btn:hover {
+	background-color: #450758 !important;
+	border: #0d0310 !important;
+	color: #cc82e8 !important;
+	transition: all 0.5s ease;
+	transform: scale(1.06);
+}
+.btnClose {
+	background-color: #0d0310 !important;
+	border: #cc82e8;
+	color: #cc82e8;
+	border-radius: 10px;
+	height: 40px;
+	font-weight: bold !important;
+	transition: all 0.5s ease;
+	font-weight: bold !important;
+	transition: all 0.5s ease;
+	border-radius: 16px;
+}
+
+.btnClose:hover {
+	background-color: #e77eb1 !important;
+	color: #0d0310;
+	font-weight: bold !important;
+	transform: scale(1.06);
+}
+
+.description {
+	display: flex;
+	align-items: center;
+}
+
+.a {
+	text-decoration: none;
+}

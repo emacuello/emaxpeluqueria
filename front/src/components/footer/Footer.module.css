@@ -1,0 +1,13 @@
+.a {
+	color: #d72850;
+	text-decoration: none;
+}
+
+.a:hover {
+	color: #cc82e8;
+	cursor: pointer;
+}
+
+.p:hover {
+	cursor: pointer;
+}

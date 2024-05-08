@@ -1,0 +1,30 @@
+.tittle {
+	text-align: center;
+	margin-top: 2rem;
+	font-size: 5rem;
+	font-weight: bold;
+	color: rgb(136, 25, 78);
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+}
+
+.construccion {
+	text-align: center;
+	font-size: 4rem;
+	font-weight: bold;
+	color: #9d5a65;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+}
+
+.leyends {
+	text-align: center;
+	font-size: 2rem;
+	font-weight: bold;
+	color: rgb(215, 40, 80);
+	text-wrap: wrap;
+}
+
+.bot {
+	margin-bottom: 5%;
+}
