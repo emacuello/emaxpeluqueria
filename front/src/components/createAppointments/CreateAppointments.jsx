@@ -29,7 +29,7 @@ const CreateAppointments = () => {
 		try {
 			if (!error.description && !error.date && !error.time) {
 				await axios.post(
-					'http://localhost:3000/appointment/schedule',
+					'https://emaxpeluqueria-back.vercel.app/appointment/schedule',
 					appointment
 				);
 				setAppointment(myAppointments);

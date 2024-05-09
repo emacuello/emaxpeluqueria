@@ -59,7 +59,10 @@ const Register = () => {
 		event.preventDefault();
 		try {
 			if (!validateFields(user) && pass()) {
-				await axios.post('http://localhost:3000/users/register', user);
+				await axios.post(
+					'https://emaxpeluqueria-back.vercel.app/users/register',
+					user
+				);
 				setShow({ estado: true });
 				timeOut();
 				setValidated(true);

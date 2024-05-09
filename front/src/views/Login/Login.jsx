@@ -36,7 +36,7 @@ const Login = () => {
 		try {
 			if (!validateFields(LoginData)) {
 				const response = await axios.post(
-					'http://localhost:3000/users/login',
+					'https://emaxpeluqueria-back.vercel.app/users/login',
 					LoginData
 				);
 				dispatch(addUser(response.data));

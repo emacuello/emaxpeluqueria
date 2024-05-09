@@ -14,7 +14,7 @@ const MyAppointments = () => {
 		try {
 			const axiosData = async () => {
 				const response = await axios(
-					`http://localhost:3000/users/${id}`
+					`https://emaxpeluqueria-back.vercel.app/users/${id}`
 				);
 				dispatch(addAppointments(response.data));
 			};

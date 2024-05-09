@@ -16,11 +16,10 @@ const Appointment = ({ date, time, user, description, id }) => {
 	const cancelAppointment = async () => {
 		try {
 			const response = await axios.put(
-				`http://localhost:3000/appointment/cancel/${id}`
+				`https://emaxpeluqueria-back.vercel.app/appointment/cancel/${id}`
 			);
 
 			setAlert({ status: true, message: response.data.details });
-			//Perdon es que me encapriche con el alert y lo quiero a toda costa, pero el estado global cuando se actualiza hace que no me renderice mi precioso alert, tuve que hacer un setTimeOut para pausar la actualizacion de la IU y darle timpo a que se muestre el alert. Es curioso que cuando actualizo un estado global para el IU todos mis estados locales se reinician, todavia no entiendo lo suficiente para que que es no pase.
 			setTimeout(() => {
 				dispatch(changeAppointments(id));
 			}, 1500);
