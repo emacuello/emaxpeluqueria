@@ -40,7 +40,7 @@ const MyAppointments = () => {
 			</div>
 			{/* Un bug que no pude solucionar es que cuando existen turnos, ej, turnos activos existentes pero no hay turnos cancelados, que aparezca un alert en la vista de turnos cancelados, o viceversa, lo intente pero no pude lograrlo, el alert solo se mostrara cuando no existan turnos. */}
 			<Accordion className="mt-5 mb-5">
-				{!appointments.length ? (
+				{!appointments?.length ? (
 					<Alert key="1" variant="info">
 						No hay turnos disponibles
 					</Alert>
@@ -68,7 +68,7 @@ const MyAppointments = () => {
 				Turnos Cancelados
 			</h2>
 			<Accordion className="mt-5 mb-5">
-				{!appointments.length ? (
+				{!appointments?.length ? (
 					<Alert variant="dark">No hay turnos cancelados</Alert>
 				) : (
 					cancelList(appointments).map((items, index) => {
