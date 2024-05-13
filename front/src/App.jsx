@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import WhithoutLoggin from './views/Login/WhithoutLoggin';
 import Locals from './views/Locals/Locals';
 import Profile from './components/profile/Profile';
+import 'aos/dist/aos.css';
 function App() {
 	const userLogin = useSelector((state) => state.user.user.user);
 	return (

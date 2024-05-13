@@ -10,7 +10,11 @@ import Alert from 'react-bootstrap/Alert';
 import styles from './Register.module.css';
 import { registerData } from '../../helpers/register';
 import { useNavigate } from 'react-router-dom';
+import Aos from 'aos';
 const Register = () => {
+	useEffect(() => {
+		Aos.init();
+	}, []);
 	const navigate = useNavigate();
 	const [user, setUser] = useState(registerData);
 	const [error, setError] = useState(registerData);
@@ -97,6 +101,7 @@ const Register = () => {
 				className={`container ${styles.form}`}
 				noValidate
 				validated={validated}
+				data-aos="fade-down"
 			>
 				<h1 className="text-center mb-3">Crea tu cuenta</h1>
 				{show.estado === true ? (

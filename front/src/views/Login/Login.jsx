@@ -8,7 +8,11 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../../redux/reducers';
+import Aos from 'aos';
 const Login = () => {
+	useEffect(() => {
+		Aos.init();
+	}, []);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [LoginData, setLoginData] = useState({
@@ -91,7 +95,10 @@ const Login = () => {
 	return (
 		<div className={`${styles.login}`}>
 			<div className={`${styles.AuthFormContainer}`}>
-				<form className={`${styles.AuthForm} ${validateForm}`}>
+				<form
+					className={`${styles.AuthForm} ${validateForm}`}
+					data-aos="fade-down"
+				>
 					<div className={`${styles.AuthFormContent}`}>
 						<h3 className={styles.AuthFormTitle}>Login</h3>
 						{showAlert.estado === true ? (
