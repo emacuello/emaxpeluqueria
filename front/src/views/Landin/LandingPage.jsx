@@ -10,7 +10,7 @@ const LandingPage = () => {
 					<Carousel.Item>
 						<LazyLoadImage
 							className={styles.imgCarrousel}
-							src="https://i.ibb.co/rcbGFMT/Peluqueria1.jpg"
+							src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/jpeg-optimizer_Peluqueria1_ebqweo"
 							alt="Peluqueria1"
 						/>
 						<Carousel.Caption className={styles.caption}>
@@ -23,7 +23,7 @@ const LandingPage = () => {
 					<Carousel.Item>
 						<LazyLoadImage
 							className={styles.imgCarrousel}
-							src="https://i.ibb.co/FXzp6ms/Peluqueria2.jpg"
+							src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/jpeg-optimizer_Peluqueria2_hnsrbo"
 							alt="Peluqueria2"
 						/>
 						<Carousel.Caption className={styles.caption}>
@@ -36,7 +36,7 @@ const LandingPage = () => {
 					<Carousel.Item>
 						<LazyLoadImage
 							className={styles.imgCarrousel}
-							src="https://i.ibb.co/2dN6hcC/Peluqueria3.jpg"
+							src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/jpeg-optimizer_Peluqueria3_iazwk4"
 							alt="Peluqueria3"
 						/>
 						<Carousel.Caption className={styles.caption}>
@@ -69,7 +69,7 @@ const LandingPage = () => {
 					<div className="col-sm-6">
 						<LazyLoadImage
 							className={styles.imgLeyends}
-							src="https://i.ibb.co/qdpvHQX/jeppe-monster-GOj-F1v-XObrg-unsplash.jpg"
+							src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/q7vrqiuabcoxvibpe8ox"
 							alt=""
 						/>
 					</div>

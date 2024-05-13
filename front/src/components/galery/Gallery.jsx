@@ -8,25 +8,25 @@ const Gallery = () => {
 			<div className={styles.row}>
 				<div className={styles.column}>
 					<LazyLoadImage
-						src="https://i.ibb.co/5WMhstJ/Peluqueria4.jpg"
+						src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/v1/peluqueria%20gallery/eo3dx1shnxivxfimq8j5"
 						alt=""
 						effect="blur"
 						placeholderSrc={placeholder}
 					/>
 					<LazyLoadImage
-						src="https://i.ibb.co/QbQvgSh/Peluqueria5.jpg"
+						src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/v1/peluqueria%20gallery/kkvgvolkkjb9vfwppbqr"
 						alt=""
 						effect="blur"
 						placeholderSrc={placeholder}
 					/>
 					<LazyLoadImage
-						src="https://i.ibb.co/s2wD5hc/delfina-pan-8esv-Je-VUdes-unsplash.jpg"
+						src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/v1/peluqueria%20gallery/jhttesi9gbggkj7jn47k"
 						alt=""
 						effect="blur"
 						placeholderSrc={placeholder}
 					/>
 					<LazyLoadImage
-						src="https://i.ibb.co/yyqF6Bc/logan-weaver-lgnwvr-knzi-Vjrvzt-A-unsplash.jpg"
+						src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/v1/peluqueria%20gallery/d2bh3tjx1uo5pvuxhqct"
 						alt=""
 						effect="blur"
 						placeholderSrc={placeholder}
@@ -34,19 +34,19 @@ const Gallery = () => {
 				</div>
 				<div className={styles.column}>
 					<LazyLoadImage
-						src="https://i.ibb.co/Q6txCLM/joshua-lawrence-d-U6e-E-j2-My8-unsplash.jpghttps://i.ibb.co/r5CJnY1/wells-chan-YYx-Nr-Hsf-Eo-I-unsplash.jpg"
+						src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/v1/peluqueria%20gallery/hqbrqtwgg6pdrexjtqon"
 						alt=""
 						effect="blur"
 						placeholderSrc={placeholder}
 					/>
 					<LazyLoadImage
-						src="https://i.ibb.co/qdpvHQX/jeppe-monster-GOj-F1v-XObrg-unsplash.jpg"
+						src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/q7vrqiuabcoxvibpe8ox"
 						alt=""
 						effect="blur"
 						placeholderSrc={placeholder}
 					/>
 					<LazyLoadImage
-						src="https://i.ibb.co/cXW9Hgc/delfina-pan-w-Jo-B8-D3hnzc-unsplash.jpg"
+						src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/v1/peluqueria%20gallery/vlkb2ygypczphxhatxin"
 						alt=""
 						effect="blur"
 						placeholderSrc={placeholder}
