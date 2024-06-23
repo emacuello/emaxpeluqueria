@@ -7,11 +7,16 @@ import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 import { validate, validateFields } from '../../helpers/validate';
 import axios from 'axios';
 import Alert from 'react-bootstrap/Alert';
+import Spinner from 'react-bootstrap/Spinner';
 import styles from './Register.module.css';
 import { registerData } from '../../helpers/register';
 import { useNavigate } from 'react-router-dom';
 import Aos from 'aos';
 const Register = () => {
+	const [loading, setLoading] = useState(false);
+
+	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+
 	useEffect(() => {
 		Aos.init();
 	}, []);
@@ -61,12 +66,10 @@ const Register = () => {
 	const [show, setShow] = useState({ estado: undefined });
 	const postUsers = async (event) => {
 		event.preventDefault();
+		setLoading(true);
 		try {
 			if (!validateFields(user) && pass()) {
-				await axios.post(
-					'https://emaxpeluqueria-back.vercel.app/users/register',
-					user
-				);
+				await axios.post(`${VITE_BASE_URL}/users/register`, user);
 				setShow({ estado: true });
 				timeOut();
 				setValidated(true);
@@ -84,6 +87,7 @@ const Register = () => {
 			setShow({ estado: false });
 			timeOut();
 			setValidated(true);
+			setLoading(false);
 			setFeedback({ display: 'block' });
 			console.log(error);
 		}
@@ -345,13 +349,30 @@ const Register = () => {
 					/>
 				</Form.Group>
 
-				<Button
-					onClick={postUsers}
-					className={`${styles.btn} w-100`}
-					type="submit"
-				>
-					Enviar
-				</Button>
+				{!loading ? (
+					<Button
+						onClick={postUsers}
+						className={`${styles.btn} w-100`}
+						type="submit"
+					>
+						Enviar
+					</Button>
+				) : (
+					<Button
+						disabled
+						className={`${styles.btn} w-100`}
+						type="submit"
+					>
+						<Spinner
+							as="span"
+							animation="grow"
+							size="sm"
+							role="status"
+							aria-hidden="true"
+						/>
+						Registrando...
+					</Button>
+				)}
 				{show.estado === true ? (
 					<Alert className="container mt-3" variant="success">
 						Los datos fueron enviados correctamente

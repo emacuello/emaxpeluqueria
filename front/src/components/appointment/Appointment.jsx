@@ -1,29 +1,60 @@
+/* eslint-disable react/prop-types */
 import Accordion from 'react-bootstrap/Accordion';
 import styles from '../../views/MyAppointments/MyAppointments.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
-import { changeAppointments } from '../../redux/reducers';
-import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import Alert from 'react-bootstrap/Alert';
-const Appointment = ({ date, time, user, description, id }) => {
+import { useNavigate } from 'react-router-dom';
+const Appointment = ({
+	date,
+	time,
+	user,
+	description,
+	id,
+	cancelAppointments,
+}) => {
 	const [show, setShow] = useState(false);
 	const [alert, setAlert] = useState({ status: undefined });
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const [token, setToken] = useState(null);
+	const navigate = useNavigate();
 
-	const dispatch = useDispatch();
+	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+	useEffect(() => {
+		const userToken = localStorage.getItem('token');
+		if (!userToken) {
+			navigate('/');
+		}
+		setToken(userToken);
+	}, [navigate]);
 	const cancelAppointment = async () => {
 		try {
-			const response = await axios.put(
-				`https://emaxpeluqueria-back.vercel.app/appointment/cancel/${id}`
-			);
-
-			setAlert({ status: true, message: response.data.details });
-			setTimeout(() => {
-				dispatch(changeAppointments(id));
-			}, 1500);
-			handleClose();
+			const config = {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+			};
+			const body = {
+				status: 'cancelled',
+			};
+			const axiosPut = async () => {
+				const response = await axios.put(
+					`${VITE_BASE_URL}/appointment/cancel/${id}`,
+					body,
+					config
+				);
+				if (response.status === 200) {
+					setAlert({ status: true, message: response.data.details });
+					cancelAppointments(id);
+					handleClose();
+				}
+			};
+			if (token) {
+				axiosPut();
+			}
 		} catch (error) {
 			setAlert({ status: false, message: error.message });
 			console.error('Error al cancelar el turno', error);

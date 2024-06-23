@@ -14,7 +14,7 @@ exports.AppDataSource = new typeorm_1.DataSource({
     password: envs_1.DB_PASSWORD,
     database: envs_1.DB_DATABASE,
     //dropSchema: true,
-    synchronize: true,
+    // synchronize: true,
     logging: false,
     entities: [Users_1.User, credential_1.Credential, appointments_1.Appointment],
     subscribers: [],

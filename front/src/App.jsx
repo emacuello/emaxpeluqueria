@@ -11,13 +11,22 @@ import Contacts from './views/Contact/Contact';
 import Services from './views/Service/Services';
 import Shops from './views/Tienda/Tienda';
 import LandingPage from './views/Landin/LandingPage';
-import { useSelector } from 'react-redux';
 import WhithoutLoggin from './views/Login/WhithoutLoggin';
 import Locals from './views/Locals/Locals';
 import Profile from './components/profile/Profile';
 import 'aos/dist/aos.css';
+import { useEffect, useState } from 'react';
 function App() {
-	const userLogin = useSelector((state) => state.user.user.user);
+	const [userLogin, setUserLogin] = useState(false);
+
+	useEffect(() => {
+		const userLogin = localStorage.getItem('token');
+		if (userLogin) {
+			setUserLogin(true);
+		} else {
+			setUserLogin(false);
+		}
+	}, []);
 	return (
 		<>
 			<Navbar></Navbar>

@@ -6,10 +6,18 @@ import NavbarLoginResgister from './NavbarLoginRegister';
 import NavbarProfile from './NavbarProfile';
 import NavbarContentLogin from './NavbarContentLogin';
 import styles from './Navbar.module.css';
-import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 const MyNavbar = () => {
-	const userLogin = useSelector((state) => state.user.user.user);
+	const [userLogin, setUserLogin] = useState(false);
 
+	useEffect(() => {
+		const userLogin = localStorage.getItem('token');
+		if (userLogin) {
+			setUserLogin(true);
+		} else {
+			setUserLogin(false);
+		}
+	}, []);
 	const NavbarContentCenter = () => {
 		if (!userLogin) {
 			return <NavbarContent></NavbarContent>;

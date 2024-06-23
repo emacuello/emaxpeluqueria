@@ -1,17 +1,53 @@
 import { useState, useEffect } from 'react';
 import Alert from 'react-bootstrap/Alert';
+import Spinner from 'react-bootstrap/Spinner';
 import styles from './CreateAppointments.module.css';
 import { myAppointments } from '../../helpers/myAppointments';
-import { useSelector } from 'react-redux';
 import { validateAppointments } from '../../helpers/validate';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
 const CreateAppointments = () => {
-	const id = useSelector((state) => state.user.user.user.id);
+	const [id, SetId] = useState(null);
 	const [appointment, setAppointment] = useState(myAppointments);
 	const [error, setError] = useState(myAppointments);
+	const [token, setToken] = useState('');
 	const [success, setSuccess] = useState({ estado: undefined });
+	const [loading, setLoading] = useState(false);
+	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+	const navigate = useNavigate();
+	useEffect(() => {
+		const userToken = localStorage.getItem('token');
+		if (!userToken) {
+			navigate('/');
+		}
+		console.log(userToken);
+		setToken(userToken);
+		console.log(token);
+	}, [navigate]);
+	useEffect(() => {
+		try {
+			const config = {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+			};
+			const axiosData = async () => {
+				const response = await axios.get(
+					`${VITE_BASE_URL}/users/token`,
+					config
+				);
+				SetId(response.data.id);
+			};
+			if (token) {
+				axiosData();
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}, [VITE_BASE_URL, token]);
+
 	const handleInputs = (event) => {
 		event.preventDefault();
 		const { name, value } = event.target;
@@ -26,25 +62,36 @@ const CreateAppointments = () => {
 	}, [appointment]);
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+		setLoading(true);
 		try {
 			if (!error.description && !error.date && !error.time) {
+				const config = {
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
+					},
+				};
 				await axios.post(
-					'https://emaxpeluqueria-back.vercel.app/appointment/schedule',
-					appointment
+					`${VITE_BASE_URL}/appointment/schedule`,
+					appointment,
+					config
 				);
 				setAppointment(myAppointments);
 				setSuccess({ estado: true });
 				setTimeout(() => {
 					setSuccess({ estado: undefined });
 				}, 8000);
+				setLoading(false);
 			} else {
 				setSuccess({ estado: false });
+				setLoading(false);
 				setTimeout(() => {
 					setSuccess({ estado: undefined });
 				}, 5000);
 			}
 		} catch (error) {
 			setSuccess({ estado: false });
+			setLoading(false);
 			setTimeout(() => {
 				setSuccess({ estado: undefined });
 			}, 5000);
@@ -196,20 +243,33 @@ const CreateAppointments = () => {
 					</div>
 
 					<div className={styles.ContainerBtn}>
-						<button
-							disabled={
-								appointment.date === '' ||
-								appointment.time === '' ||
-								appointment.description === '' ||
-								error.date ||
-								error.time ||
-								error.description
-							}
-							className={styles.btn}
-							type="submit"
-						>
-							Agendar
-						</button>
+						{!loading ? (
+							<button
+								disabled={
+									appointment.date === '' ||
+									appointment.time === '' ||
+									appointment.description === '' ||
+									error.date ||
+									error.time ||
+									error.description
+								}
+								className={styles.btn}
+								type="submit"
+							>
+								Agendar
+							</button>
+						) : (
+							<button className={styles.btn} disabled>
+								<Spinner
+									as="span"
+									animation="grow"
+									size="sm"
+									role="status"
+									aria-hidden="true"
+								/>
+								Agendando...
+							</button>
+						)}
 					</div>
 				</form>
 			</div>

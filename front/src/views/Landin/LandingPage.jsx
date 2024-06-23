@@ -80,7 +80,7 @@ const LandingPage = () => {
 					<div className="col-sm-6" data-aos="fade-left">
 						<LazyLoadImage
 							className={styles.imgLeyends}
-							src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/q7vrqiuabcoxvibpe8ox"
+							src="https://res.cloudinary.com/dxrjz4ycj/image/upload/f_auto,q_auto/ctaicds3m3vqhsxpyjup"
 							alt=""
 						/>
 					</div>

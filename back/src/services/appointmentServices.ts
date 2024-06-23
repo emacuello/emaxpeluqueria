@@ -1,6 +1,10 @@
+import { SECRET_KEY } from '../config/envs';
 import { AppointmentDtos } from '../dtos/appointmentDtos';
+import { Appointment } from '../entities/appointments';
+import { JwtPayload } from '../interfaces/IPayload';
 import { appointmentsRepository } from '../repository/appointmentRepository';
 import { getUserId } from './userServices';
+import jwt from 'jsonwebtoken';
 
 export const getAllAppointments = async () => {
 	try {
@@ -24,32 +28,49 @@ export const getAppointmentbyId = async (id: number) => {
 	}
 };
 
-export const createAppointment = async (appointments: AppointmentDtos) => {
+export const createAppointment = async (
+	appointments: AppointmentDtos,
+	token: string
+) => {
 	try {
 		const appointment = {
 			date: appointments.date,
 			time: appointments.time,
-			description: appointments.description
+			description: appointments.description,
 		};
-		const newAppointment = await appointmentsRepository.create(appointment);
-		const userid = await getUserId(appointments.userid);
-		if (userid !== undefined)
-			newAppointment.user = userid;
+		const newAppointment = appointmentsRepository.create(appointment);
+		const userid = await getUserId(appointments.userid, token);
+		if (userid !== undefined) newAppointment.user = userid;
 		else throw Error('Error al crear el turno');
-		await appointmentsRepository.save(newAppointment);
-		console.log('Turno creado con exito', newAppointment);
+		const saveAppointment = await appointmentsRepository.save(
+			newAppointment
+		);
+		if (!appointment) throw Error('Error al crear el turno');
+		return saveAppointment;
 	} catch (error) {
 		console.log('Error al crear el turno', error);
 		throw error;
 	}
 };
 
-export const changeAppointment = async (id: number) => {
+export const changeAppointment = async (
+	id: number,
+	token: string,
+	change: Partial<Appointment>
+) => {
 	try {
-		const appointment = await appointmentsRepository.statusChanged(id);
-		if(appointment.status !== 'cancelled') appointment.status = 'cancelled';
-		else throw Error('El turno ya fue cancelado');
-		await appointmentsRepository.save(appointment);
+		const user = jwt.verify(token, SECRET_KEY!) as JwtPayload;
+		const appointment = await appointmentsRepository.findAppointmentsbyId(
+			id
+		);
+		if (appointment.user.email !== user?.aud) throw Error('No autorizado');
+		const appointmentChange = await appointmentsRepository.statusChanged(
+			id,
+			change
+		);
+		if (!appointmentChange)
+			throw Error('Error al cambiar el estado del turno');
+		return appointmentChange;
 	} catch (error) {
 		console.log('Error al cambiar el estado del turno');
 		throw error;

@@ -4,17 +4,25 @@ import Form from 'react-bootstrap/Form';
 import styles from './Login.module.css';
 import { validateFields, validateLogin } from '../../helpers/validate';
 import Alert from 'react-bootstrap/Alert';
+import Spinner from 'react-bootstrap/Spinner';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../../redux/reducers';
 import Aos from 'aos';
 const Login = () => {
-	useEffect(() => {
-		Aos.init();
-	}, []);
-	const dispatch = useDispatch();
+	const [loading, setLoading] = useState(false);
+	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 	const navigate = useNavigate();
+	useEffect(() => {
+		const token = localStorage.getItem('token');
+
+		if (token) {
+			navigate('/');
+		}
+		Aos.init();
+	}, [navigate]);
+	const dispatch = useDispatch();
 	const [LoginData, setLoginData] = useState({
 		username: '',
 		password: '',
@@ -37,18 +45,20 @@ const Login = () => {
 	const [validateForm, setValidateForm] = useState(false);
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+		setLoading(true);
 		try {
 			if (!validateFields(LoginData)) {
 				const response = await axios.post(
-					'https://emaxpeluqueria-back.vercel.app/users/login',
+					`${VITE_BASE_URL}/users/login`,
 					LoginData
 				);
 				dispatch(addUser(response.data));
+				localStorage.setItem('token', response.data.token);
 				setShowAlert({ estado: true });
 				setValidateForm(true);
 				timeOut();
 				setTimeout(() => {
-					navigate('/home');
+					window.location.href = '/home';
 				}, 200);
 			} else {
 				setShowAlert({ estado: false });
@@ -59,6 +69,7 @@ const Login = () => {
 			setShowAlert({ estado: false });
 			setValidateForm(true);
 			timeOut();
+			setLoading(false);
 			console.error('Error al iniciar sesión');
 		}
 	};
@@ -162,13 +173,26 @@ const Login = () => {
 							)}
 						</div>
 						<div className="d-grid gap-2 mt-3">
-							<button
-								onClick={handleSubmit}
-								type="submit"
-								className={styles.btn}
-							>
-								Ingresar
-							</button>
+							{!loading ? (
+								<button
+									onClick={handleSubmit}
+									type="submit"
+									className={styles.btn}
+								>
+									Ingresar
+								</button>
+							) : (
+								<button className={styles.btn} disabled>
+									<Spinner
+										as="span"
+										animation="grow"
+										size="sm"
+										role="status"
+										aria-hidden="true"
+									/>
+									Ingresando ..
+								</button>
+							)}
 						</div>
 						<p className="forgot-password text-right mt-2">
 							No estas registrado?{' '}

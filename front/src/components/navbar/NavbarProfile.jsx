@@ -1,18 +1,19 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styles from './NavbarProfile.module.css';
 import Image from 'react-bootstrap/Image';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { useDispatch } from 'react-redux';
-import { userLogOut } from '../../redux/reducers';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import { useState } from 'react';
 const NavbarProfile = () => {
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const [show, setShow] = useState(false);
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
+
 	const logOut = () => {
-		dispatch(userLogOut());
-		//Por alguna extraña razon, no se si relacionada a la magia negre pero similar, el navigate no me funciona sin usar el SetTimeout, pero bueno, tuve que hacerlo para darle esa hermosa funcionalidad.
-		setTimeout(() => {
-			navigate('/');
-		}, 100);
+		localStorage.removeItem('token');
+
+		window.location.href = '/';
 	};
 	return (
 		<>
@@ -45,7 +46,7 @@ const NavbarProfile = () => {
 						</Dropdown.Item>
 						<Dropdown.Item>
 							<div>
-								<Link className={styles.a} onClick={logOut}>
+								<Link className={styles.a} onClick={handleShow}>
 									Logout
 								</Link>
 							</div>
@@ -53,6 +54,28 @@ const NavbarProfile = () => {
 					</Dropdown.Menu>
 				</Dropdown>
 			</>
+			<Modal
+				show={show}
+				onHide={handleClose}
+				backdrop="static"
+				keyboard={false}
+			>
+				<Modal.Header closeButton>
+					<Modal.Title>Seguro que quieres salir?</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					Si cierras sesión, tienes que volver a ingresar tus
+					credenciales!
+				</Modal.Body>
+				<Modal.Footer>
+					<Button variant="secondary" onClick={handleClose}>
+						Cancelar
+					</Button>
+					<Button variant="primary" onClick={logOut}>
+						Cerrar sesión
+					</Button>
+				</Modal.Footer>
+			</Modal>
 		</>
 	);
 };

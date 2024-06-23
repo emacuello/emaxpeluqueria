@@ -39,16 +39,18 @@ const createAppointment = (appointments) => __awaiter(void 0, void 0, void 0, fu
         const appointment = {
             date: appointments.date,
             time: appointments.time,
-            description: appointments.description
+            description: appointments.description,
         };
-        const newAppointment = yield appointmentRepository_1.appointmentsRepository.create(appointment);
+        const newAppointment = appointmentRepository_1.appointmentsRepository.create(appointment);
         const userid = yield (0, userServices_1.getUserId)(appointments.userid);
         if (userid !== undefined)
             newAppointment.user = userid;
         else
             throw Error('Error al crear el turno');
-        yield appointmentRepository_1.appointmentsRepository.save(newAppointment);
-        console.log('Turno creado con exito', newAppointment);
+        const saveAppointment = yield appointmentRepository_1.appointmentsRepository.save(newAppointment);
+        if (!appointment)
+            throw Error('Error al crear el turno');
+        return saveAppointment;
     }
     catch (error) {
         console.log('Error al crear el turno', error);

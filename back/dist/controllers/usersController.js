@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.postUser = exports.getUserById = exports.getUsers = void 0;
+exports.logout = exports.login = exports.postUser = exports.getUserById = exports.getUsers = void 0;
 const userServices_1 = require("../services/userServices");
+const envs_1 = require("../config/envs");
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield (0, userServices_1.getAllUsers)();
@@ -25,9 +26,12 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getUsers = getUsers;
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = req.user;
+    if (!user)
+        res.status(401).json({ message: 'No autorizado' });
     try {
         const id = Number(req.params.id);
-        const userbyId = yield (0, userServices_1.getUserId)(id);
+        const userbyId = yield (0, userServices_1.getUserId)(id, user);
         if (userbyId === null || userbyId === undefined) {
             throw new Error('Usuario no encontrado');
         }
@@ -65,8 +69,12 @@ exports.postUser = postUser;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const credenciales = yield req.body;
-        const user = yield (0, userServices_1.credentialCheck)(credenciales);
-        res.status(200).json({ login: true, user });
+        const token = yield (0, userServices_1.credentialCheck)(credenciales);
+        res.status(200)
+            .cookie('token', token, {
+            httpOnly: true,
+        })
+            .json({ login: true });
     }
     catch (error) {
         res.status(400).json({
@@ -76,3 +84,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.login = login;
+const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.clearCookie('token').redirect(`${envs_1.LOGIN_REDIRECT}`);
+});
+exports.logout = logout;
