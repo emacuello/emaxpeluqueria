@@ -4,10 +4,33 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import Aos from 'aos';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { addProducts } from '../../redux/reducers';
 const LandingPage = () => {
+	const dispatch = useDispatch();
+	const products = useSelector((state) => state.products?.products);
 	useEffect(() => {
 		Aos.init();
-	}, []);
+		if (products[1]) {
+			return;
+		} else {
+			try {
+				const axiosResponse = async () => {
+					const response = await axios(
+						'http://localhost:3001/products'
+					);
+					console.log(response.data);
+					if (response.data) {
+						dispatch(addProducts(response.data));
+					}
+				};
+				axiosResponse();
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	}, [dispatch, products]);
 	return (
 		<>
 			<div className={styles.divContainer}>

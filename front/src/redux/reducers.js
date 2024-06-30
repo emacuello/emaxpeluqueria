@@ -4,6 +4,7 @@ import { combineReducers } from '@reduxjs/toolkit';
 const initialState = {
 	user: {},
 	userAppointments: {},
+	products: {},
 };
 
 const loginCredentials = createSlice({
@@ -27,6 +28,10 @@ const appointmentsSlice = createSlice({
 				...action.payload,
 			};
 		},
+		addOneAppointments: (state, action) => {
+			console.log(state, action);
+			state.userAppointments.appointment.push(action.payload);
+		},
 		changeAppointments: (state, action) => {
 			const appointments = state.userAppointments.appointment;
 
@@ -47,13 +52,26 @@ const appointmentsSlice = createSlice({
 	},
 });
 
+const productsSlice = createSlice({
+	name: 'products',
+	initialState,
+	reducers: {
+		addProducts: (state, action) => {
+			state.products = action.payload;
+		},
+	},
+});
+
 const rootReducer = combineReducers({
 	user: loginCredentials.reducer,
 	appointments: appointmentsSlice.reducer,
+	products: productsSlice.reducer,
 });
 
-export const { addAppointments, changeAppointments } =
+export const { addAppointments, changeAppointments, addOneAppointments } =
 	appointmentsSlice.actions;
 export const { addUser, userLogOut } = loginCredentials.actions;
+
+export const { addProducts } = productsSlice.actions;
 
 export default rootReducer;

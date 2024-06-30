@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from 'react-router-dom';
+import Spinner from 'react-bootstrap/Spinner';
 const Appointment = ({
 	date,
 	time,
@@ -18,6 +19,7 @@ const Appointment = ({
 	const [alert, setAlert] = useState({ status: undefined });
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const [loaderButton, setLoaderButton] = useState(false);
 	const [token, setToken] = useState(null);
 	const navigate = useNavigate();
 
@@ -31,6 +33,7 @@ const Appointment = ({
 	}, [navigate]);
 	const cancelAppointment = async () => {
 		try {
+			setLoaderButton(true);
 			const config = {
 				headers: {
 					'Content-Type': 'application/json',
@@ -50,6 +53,7 @@ const Appointment = ({
 					setAlert({ status: true, message: response.data.details });
 					cancelAppointments(id);
 					handleClose();
+					setLoaderButton(false);
 				}
 			};
 			if (token) {
@@ -59,6 +63,7 @@ const Appointment = ({
 			setAlert({ status: false, message: error.message });
 			console.error('Error al cancelar el turno', error);
 			handleClose();
+			setLoaderButton(false);
 		}
 	};
 
@@ -108,9 +113,25 @@ const Appointment = ({
 					<button className={styles.btnClose} onClick={handleClose}>
 						Cerrar
 					</button>
-					<button className={styles.btn} onClick={cancelAppointment}>
-						Cancelar de todas formas
-					</button>
+					{loaderButton ? (
+						<button className={styles.btn} disabled>
+							<Spinner
+								as="span"
+								animation="grow"
+								size="sm"
+								role="status"
+								aria-hidden="true"
+							/>
+							Cancelando...
+						</button>
+					) : (
+						<button
+							className={styles.btn}
+							onClick={cancelAppointment}
+						>
+							Cancelar de todas formas
+						</button>
+					)}
 				</Modal.Footer>
 			</Modal>
 		</>

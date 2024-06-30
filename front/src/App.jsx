@@ -16,6 +16,7 @@ import Locals from './views/Locals/Locals';
 import Profile from './components/profile/Profile';
 import 'aos/dist/aos.css';
 import { useEffect, useState } from 'react';
+import Product from './components/product/Product';
 function App() {
 	const [userLogin, setUserLogin] = useState(false);
 
@@ -62,6 +63,7 @@ function App() {
 				></Route>
 				<Route path="/services" element={<Services />}></Route>
 				<Route path="/shops" element={<Shops></Shops>}></Route>
+				<Route path="/shops/:id" element={<Product></Product>}></Route>
 				<Route
 					path="/locals"
 					element={

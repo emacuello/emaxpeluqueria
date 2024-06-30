@@ -52,7 +52,7 @@ const Login = () => {
 					`${VITE_BASE_URL}/users/login`,
 					LoginData
 				);
-				dispatch(addUser(response.data));
+				dispatch(addUser(response.data.user));
 				localStorage.setItem('token', response.data.token);
 				setShowAlert({ estado: true });
 				setValidateForm(true);

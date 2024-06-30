@@ -68,7 +68,7 @@ export const credentialCheck = async (credenciales: Credential) => {
 			throw Error('Error al generar el token 1');
 		const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '7h' });
 		if (!token) throw Error('Error al generar el token 2');
-		return token;
+		return { token, user };
 	} catch (error) {
 		throw Error('Error al validar credenciales');
 	}

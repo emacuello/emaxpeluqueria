@@ -79,8 +79,8 @@ export const postUser = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
 	try {
 		const credenciales = await req.body;
-		const token = await credentialCheck(credenciales);
-		res.status(200).json({ login: true, token });
+		const { token, user } = await credentialCheck(credenciales);
+		res.status(200).json({ login: true, token, user });
 	} catch (error) {
 		res.status(400).json({
 			message: 'Error al iniciar sesion',

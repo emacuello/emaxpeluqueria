@@ -49,7 +49,7 @@ export const postAppointment = async (req: Request, res: Response) => {
 			token!
 		);
 		if (!result) throw Error('Error al crear el turno');
-		res.status(201).json({ details: 'Turno creado exitosamente' });
+		res.status(201).json({ details: 'Turno creado exitosamente', result });
 	} catch (error) {
 		res.status(400).json({
 			message: 'Error al crear el turno',

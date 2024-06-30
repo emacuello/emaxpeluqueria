@@ -6,6 +6,9 @@ import Alert from 'react-bootstrap/Alert';
 import Spinner from 'react-bootstrap/Spinner';
 import styles from './MyAppointments.module.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addAppointments, changeAppointments } from '../../redux/reducers';
+
 const MyAppointments = () => {
 	const [appointments, setAppointments] = useState({});
 	const [token, setToken] = useState(null);
@@ -13,6 +16,7 @@ const MyAppointments = () => {
 	const [loader, setLoader] = useState(false);
 	const navigate = useNavigate();
 	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+	const dispatch = useDispatch();
 	useEffect(() => {
 		const userToken = localStorage.getItem('token');
 		if (!userToken) {
@@ -20,31 +24,43 @@ const MyAppointments = () => {
 		}
 		setToken(userToken);
 	}, [navigate]);
+	const userAppointments = useSelector(
+		(state) => state.appointments?.userAppointments
+	);
 	useEffect(() => {
-		try {
-			const config = {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-				},
-			};
-			const axiosData = async () => {
-				const response = await axios(
-					`${VITE_BASE_URL}/users/token`,
-					config
-				);
-				console.log(response);
-				setAppointments(response.data.appointment);
-				setUser(response.data);
-				setLoader(true);
-			};
-			if (token) {
-				axiosData();
+		console.log(userAppointments);
+		if (userAppointments['appointment']) {
+			setAppointments(userAppointments?.appointment);
+			setUser(userAppointments);
+			setLoader(true);
+			return;
+		} else {
+			try {
+				const config = {
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const axiosData = async () => {
+					const response = await axios(
+						`${VITE_BASE_URL}/users/token`,
+						config
+					);
+					console.log(response);
+					setAppointments(response.data.appointment);
+					dispatch(addAppointments(response.data));
+					setUser(response.data);
+					setLoader(true);
+				};
+				if (token) {
+					axiosData();
+				}
+			} catch (error) {
+				console.error(error);
 			}
-		} catch (error) {
-			console.error(error);
 		}
-	}, [navigate, VITE_BASE_URL, token]);
+	}, [navigate, VITE_BASE_URL, token, userAppointments, dispatch]);
 
 	const cancelList = (appointments) => {
 		return appointments.filter((item) => {
@@ -53,6 +69,7 @@ const MyAppointments = () => {
 	};
 
 	const cancelAppointments = (id) => {
+		dispatch(changeAppointments(id));
 		setAppointments((prevItems) =>
 			prevItems.map((x) => {
 				if (x.id === id) {
