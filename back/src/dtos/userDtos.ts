@@ -5,6 +5,7 @@ export interface IUserDtos {
 	nDni: number;
 	username: string;
 	password: string;
+	image?: string;
 }
 
 export interface IUserCreate {
