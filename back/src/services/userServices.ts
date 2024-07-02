@@ -7,8 +7,11 @@ import { usersRepository } from '../repository/userRepository';
 import { addCredential, checkCredential } from './credentialServices';
 import jwt from 'jsonwebtoken';
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (token: string) => {
 	try {
+		const user = jwt.verify(token, SECRET_KEY!) as JwtPayload;
+		if (user.role !== 'admin')
+			throw Error('No estas autorizado para realizar esta accion');
 		const users = usersRepository.findAllUsers();
 		return users;
 	} catch (error) {

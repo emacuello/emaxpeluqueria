@@ -12,8 +12,11 @@ import {
 import { HEADERS_TOKEN, LOGIN_REDIRECT } from '../config/envs';
 
 export const getUsers = async (req: Request, res: Response) => {
+	const user = req.headers?.authorization;
+	if (!user) res.status(401).json({ message: 'No autorizado' });
+	const token = user?.split(' ')[1];
 	try {
-		const users = await getAllUsers();
+		const users = await getAllUsers(token as string);
 		res.status(200).json(users);
 	} catch (error) {
 		res.status(404).json({
@@ -25,9 +28,11 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUserToken = async (req: Request, res: Response) => {
 	const user = req.headers?.authorization;
+	console.log(user, 'user');
+
 	if (!user) res.status(401).json({ message: 'No autorizado' });
 	const token = user?.split(' ')[1];
-	console.log(token);
+	console.log(token, 'token');
 
 	try {
 		const user = await getUser(token!);
@@ -61,6 +66,11 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const postUser = async (req: Request, res: Response) => {
+	const user = req.headers?.authorization;
+	if (!user) res.status(401).json({ message: 'No autorizado' });
+	const token = user?.split(' ')[1];
+	if (token !== HEADERS_TOKEN)
+		res.status(401).json({ message: 'No autorizado' });
 	try {
 		const { name, email, password, birthdate, nDni, username } =
 			await req.body;
@@ -82,6 +92,11 @@ export const postUser = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
+	const user = req.headers?.authorization;
+	if (!user) res.status(401).json({ message: 'No autorizado' });
+	const token = user?.split(' ')[1];
+	if (token !== HEADERS_TOKEN)
+		res.status(401).json({ message: 'No autorizado' });
 	try {
 		const credenciales = await req.body;
 		const { token, user } = await credentialCheck(credenciales);

@@ -21,8 +21,11 @@ export const getAppointment = async (req: Request, res: Response) => {
 };
 
 export const getAppointments = async (req: Request, res: Response) => {
+	const user = req.headers?.authorization;
+	if (!user) res.status(401).json({ message: 'No autorizado' });
+	const token = user?.split(' ')[1];
 	try {
-		const result = await getAllAppointments();
+		const result = await getAllAppointments(token!);
 		res.status(200).json(result);
 		console.log('Turnos encontrados');
 	} catch (error) {
