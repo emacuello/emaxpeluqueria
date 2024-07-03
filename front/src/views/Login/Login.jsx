@@ -49,7 +49,7 @@ const Login = () => {
 		try {
 			if (!validateFields(LoginData)) {
 				const response = await axios.post(
-					`${VITE_BASE_URL}/users/login`,
+					`${VITE_BASE_URL}/auth/login`,
 					LoginData
 				);
 				dispatch(addUser(response.data.user));

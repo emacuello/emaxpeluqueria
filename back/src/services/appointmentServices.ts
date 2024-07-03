@@ -41,13 +41,13 @@ export const createAppointment = async (
 			description: appointments.description,
 		};
 		const newAppointment = appointmentsRepository.create(appointment);
-		const userid = await getUserId(appointments.userid, token);
-		if (userid !== undefined) newAppointment.user = userid;
+		const user = await getUserId(appointments.userid, token);
+		if (user !== undefined) newAppointment.user = user;
 		else throw Error('Error al crear el turno');
 		const saveAppointment =
 			await appointmentsRepository.save(newAppointment);
 		if (!appointment) throw Error('Error al crear el turno');
-		return saveAppointment;
+		return { appointment: saveAppointment, user };
 	} catch (error) {
 		console.log('Error al crear el turno', error);
 		throw error;

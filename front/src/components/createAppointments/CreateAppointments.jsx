@@ -87,7 +87,7 @@ const CreateAppointments = () => {
 					},
 				};
 				const response = await axios.post(
-					`${VITE_BASE_URL}/appointment/schedule`,
+					`${VITE_BASE_URL}/appointments`,
 					appointment,
 					config
 				);

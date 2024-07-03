@@ -14,6 +14,8 @@ const Shops = () => {
 	const [loader, setLoader] = useState(false);
 	const dispatch = useDispatch();
 	const productsState = useSelector((state) => state.products?.products);
+	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+
 	useEffect(() => {
 		console.log(productsState);
 		if (productsState[1]) {
@@ -22,9 +24,7 @@ const Shops = () => {
 		} else {
 			try {
 				const axiosResponse = async () => {
-					const response = await axios(
-						'http://localhost:3001/products'
-					);
+					const response = await axios(`${VITE_BASE_URL}/products`);
 					console.log(response.data);
 					if (response.data) {
 						setProducts(response.data);
@@ -37,7 +37,7 @@ const Shops = () => {
 				console.log(error);
 			}
 		}
-	}, [dispatch, products, productsState]);
+	}, [VITE_BASE_URL, dispatch, products, productsState]);
 	return (
 		<>
 			<h1 className="text-center pt-4">Nuestra tienda</h1>

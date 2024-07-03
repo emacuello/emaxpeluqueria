@@ -69,7 +69,7 @@ const Register = () => {
 		setLoading(true);
 		try {
 			if (!validateFields(user) && pass()) {
-				await axios.post(`${VITE_BASE_URL}/users/register`, user);
+				await axios.post(`${VITE_BASE_URL}/auth/register`, user);
 				setShow({ estado: true });
 				timeOut();
 				setValidated(true);

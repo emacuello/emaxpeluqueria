@@ -45,7 +45,7 @@ const Appointment = ({
 			};
 			const axiosPut = async () => {
 				const response = await axios.put(
-					`${VITE_BASE_URL}/appointment/cancel/${id}`,
+					`${VITE_BASE_URL}/appointments/${id}`,
 					body,
 					config
 				);

@@ -10,6 +10,8 @@ import { addProducts } from '../../redux/reducers';
 const LandingPage = () => {
 	const dispatch = useDispatch();
 	const products = useSelector((state) => state.products?.products);
+	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+
 	useEffect(() => {
 		Aos.init();
 		if (products[1]) {
@@ -17,9 +19,7 @@ const LandingPage = () => {
 		} else {
 			try {
 				const axiosResponse = async () => {
-					const response = await axios(
-						'http://localhost:3001/products'
-					);
+					const response = await axios(`${VITE_BASE_URL}/products`);
 					console.log(response.data);
 					if (response.data) {
 						dispatch(addProducts(response.data));
@@ -30,7 +30,7 @@ const LandingPage = () => {
 				console.log(error);
 			}
 		}
-	}, [dispatch, products]);
+	}, [VITE_BASE_URL, dispatch, products]);
 	return (
 		<>
 			<div className={styles.divContainer}>

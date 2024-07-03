@@ -8,6 +8,7 @@ function Product() {
 	const [product, setProduct] = useState(null);
 	const { id } = useParams();
 	const products = useSelector((state) => state.products?.products);
+	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 	useEffect(() => {
 		console.log(products);
@@ -16,15 +17,13 @@ function Product() {
 			setProduct(product);
 		} else {
 			const axiosResponse = async () => {
-				const response = await axios(
-					`http://localhost:3001/products/${id}`
-				);
+				const response = await axios(`${VITE_BASE_URL}/products/${id}`);
 				console.log(response.data);
 				if (response.data) setProduct(response.data);
 			};
 			if (product === null) axiosResponse();
 		}
-	}, [product, id, products]);
+	}, [product, id, products, VITE_BASE_URL]);
 
 	return (
 		<div>
