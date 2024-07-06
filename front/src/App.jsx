@@ -17,6 +17,7 @@ import Profile from './components/profile/Profile';
 import 'aos/dist/aos.css';
 import { useEffect, useState } from 'react';
 import Product from './components/product/Product';
+import Cart from './views/Cart/Cart';
 function App() {
 	const [userLogin, setUserLogin] = useState(false);
 
@@ -84,6 +85,9 @@ function App() {
 						)
 					}
 				></Route>
+				<Route>
+					<Route path="/cart" element={<Cart></Cart>}></Route>
+				</Route>
 			</Routes>
 			<Footer></Footer>
 		</>
