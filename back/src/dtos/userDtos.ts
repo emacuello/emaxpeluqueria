@@ -6,6 +6,7 @@ export interface IUserDtos {
 	username: string;
 	password: string;
 	image?: string;
+	serverPrincipal?: boolean;
 }
 
 export interface IUserCreate {
@@ -13,4 +14,9 @@ export interface IUserCreate {
 	email: string;
 	birthdate: string;
 	nDni: number;
+}
+
+export interface IChangePassword {
+	oldPassword: string;
+	newPassword: string;
 }

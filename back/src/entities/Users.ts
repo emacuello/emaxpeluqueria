@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import {
 	Column,
 	Entity,
@@ -20,10 +21,13 @@ export class User {
 	@Column({ default: 'https://i.ibb.co/8Ns4z0t/user-center-5-128.png' })
 	image: string;
 	@Column({ default: false }) socialUser: boolean;
-	@OneToOne(() => Credential)
+	@Column({ default: false }) serverPrincipal: boolean;
+	@OneToOne(() => Credential, { cascade: true })
 	@JoinColumn({ name: 'credentialsid' })
 	credential: Credential;
 
-	@OneToMany(() => Appointment, (appointment) => appointment.user)
+	@OneToMany(() => Appointment, (appointment) => appointment.user, {
+		cascade: true,
+	})
 	appointment: Appointment[];
 }

@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import styles from './Tienda.module.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { addProducts } from '../../redux/reducers';
+import { addProducts, setCountCart } from '../../redux/reducers';
 import Placeholder from 'react-bootstrap/Placeholder';
 const Shops = () => {
 	const navigate = useNavigate();
@@ -33,6 +33,7 @@ const Shops = () => {
 			currentCart.push({ ...product, quantity: 1, total: product.price });
 		}
 		setCart(currentCart);
+		dispatch(setCountCart(currentCart.length));
 		localStorage.setItem('product', JSON.stringify(currentCart));
 	};
 

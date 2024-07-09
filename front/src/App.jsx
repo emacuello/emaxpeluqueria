@@ -13,11 +13,14 @@ import Shops from './views/Tienda/Tienda';
 import LandingPage from './views/Landin/LandingPage';
 import WhithoutLoggin from './views/Login/WhithoutLoggin';
 import Locals from './views/Locals/Locals';
-import Profile from './components/profile/Profile';
+import Profile from './views/Profile/Profile';
 import 'aos/dist/aos.css';
 import { useEffect, useState } from 'react';
 import Product from './components/product/Product';
 import Cart from './views/Cart/Cart';
+import Auth from './views/Auth/Auth';
+import PaymentSucess from './views/Payment/PaymentSucess';
+import PaymentCancel from './views/Payment/PaymentCancel';
 function App() {
 	const [userLogin, setUserLogin] = useState(false);
 
@@ -87,6 +90,22 @@ function App() {
 				></Route>
 				<Route>
 					<Route path="/cart" element={<Cart></Cart>}></Route>
+				</Route>
+				<Route>
+					<Route
+						path="/authenticated"
+						element={<Auth></Auth>}
+					></Route>
+				</Route>
+				<Route>
+					<Route
+						path="/payment/sucess"
+						element={<PaymentSucess></PaymentSucess>}
+					></Route>
+					<Route
+						path="/payment/cancel"
+						element={<PaymentCancel></PaymentCancel>}
+					></Route>
 				</Route>
 			</Routes>
 			<Footer></Footer>

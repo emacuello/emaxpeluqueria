@@ -49,9 +49,9 @@ const Appointment = ({
 					body,
 					config
 				);
-				if (response.status === 200) {
+				if (response.status === 200 || response.status === 201) {
 					setAlert({ status: true, message: response.data.details });
-					cancelAppointments(id);
+					cancelAppointments(response.data.result.id);
 					handleClose();
 					setLoaderButton(false);
 				}

@@ -2,12 +2,14 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Carousel from 'react-bootstrap/Carousel';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCountCart } from '../../redux/reducers';
 import styles from './Product.module.css';
 
 function Product() {
 	const [product, setProduct] = useState(null);
 	const [quantity, setQuantity] = useState(1);
+	const dispatch = useDispatch();
 	const { id } = useParams();
 	const products = useSelector((state) => state.products?.products);
 	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -26,6 +28,29 @@ function Product() {
 			if (product === null) axiosResponse();
 		}
 	}, [product, id, products, VITE_BASE_URL]);
+	const addToCart = (product, quantity) => {
+		const currentCart = JSON.parse(localStorage.getItem('product')) || [];
+		if (
+			currentCart?.some((productCart) => productCart._id === product._id)
+		) {
+			currentCart.forEach((product) => {
+				if (product._id === product._id) {
+					product.quantity += quantity;
+					product.total = product.price * product.quantity;
+				}
+			});
+		} else {
+			currentCart.push({
+				...product,
+				quantity: quantity,
+				total: product.price * quantity,
+			});
+		}
+
+		localStorage.setItem('product', JSON.stringify(currentCart));
+
+		dispatch(setCountCart(currentCart.length));
+	};
 
 	return (
 		<>
@@ -90,10 +115,13 @@ function Product() {
 								/>
 								<button
 									className={`${styles.btn} flex-shrink-0`}
+									onClick={() => {
+										addToCart(product, quantity);
+									}}
 									type="button"
 								>
 									<i className="bi-cart-fill me-1"></i>
-									Add to cart
+									Añadir al carrito
 								</button>
 							</div>
 							<div className="small mb-1 mt-2">

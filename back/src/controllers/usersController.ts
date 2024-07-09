@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import {
+	changePass,
 	credentialCheck,
+	deleteUserToken,
 	getAllUsers,
 	getUser,
 	getUserByEmail,
@@ -99,6 +101,7 @@ export const login = async (req: Request, res: Response) => {
 		res.status(401).json({ message: 'No autorizado' });
 	try {
 		const credenciales = await req.body;
+
 		const { token, user } = await credentialCheck(credenciales);
 		res.status(200).json({ login: true, token, user });
 	} catch (error) {
@@ -166,6 +169,39 @@ export const newUsergoogle = async (req: Request, res: Response) => {
 	} catch (error) {
 		res.status(400).json({
 			meassage: 'Error al crear usuario',
+			detail: 'Los datos son incorrectos',
+		});
+	}
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+	try {
+		const jwt = req.headers?.authorization;
+		if (!jwt) res.status(401).json({ message: 'No autorizado' });
+		const token = jwt?.split(' ')[1];
+		if (!token) res.status(401).json({ message: 'No autorizado' });
+		const data = req.body;
+		const update = changePass(token!, data);
+		res.status(200).json(update);
+	} catch (error) {
+		res.status(400).json({
+			message: 'Error al actualizar usuario',
+			detail: 'Los datos son incorrectos',
+		});
+	}
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+	try {
+		const jwt = req.headers?.authorization;
+		if (!jwt) res.status(401).json({ message: 'No autorizado' });
+		const token = jwt?.split(' ')[1];
+		if (!token) res.status(401).json({ message: 'No autorizado' });
+		const user = await deleteUserToken(token!);
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(400).json({
+			message: 'Error al borrar usuario',
 			detail: 'Los datos son incorrectos',
 		});
 	}

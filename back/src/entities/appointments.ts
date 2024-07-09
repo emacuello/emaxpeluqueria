@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './Users';
 
@@ -7,8 +8,8 @@ export class Appointment {
 	@Column({ length: 40 }) date: string;
 	@Column({ length: 50 }) time: string;
 	@Column({ length: 50 }) description: string;
-	@Column({default: 'active'}) status: string;
+	@Column({ default: 'active' }) status: string;
 
-	@ManyToOne(() => User, (user) => user.appointment) user: User;
+	@ManyToOne(() => User, (user) => user.appointment, { onDelete: 'CASCADE' })
+	user: User;
 }
-

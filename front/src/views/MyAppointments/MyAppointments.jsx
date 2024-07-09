@@ -58,13 +58,15 @@ const MyAppointments = () => {
 				}
 			} catch (error) {
 				console.error(error);
+				localStorage.removeItem('token');
+				navigate('/');
 			}
 		}
 	}, [navigate, VITE_BASE_URL, token, userAppointments, dispatch]);
 
 	const cancelList = (appointments) => {
 		return appointments.filter((item) => {
-			if (item.status === 'cancelled') return item;
+			if (item?.status === 'cancelled') return item;
 		});
 	};
 
@@ -95,7 +97,7 @@ const MyAppointments = () => {
 					token && appointments?.length ? (
 						appointments
 							.filter((items) => {
-								if (items.status === 'active') return items;
+								if (items?.status === 'active') return items;
 							})
 							.map((item) => {
 								return (

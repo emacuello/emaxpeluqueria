@@ -69,9 +69,9 @@ export const putAppointment = async (req: Request, res: Response) => {
 	if (!user) res.status(401).json({ message: 'No autorizado' });
 	const token = user?.split(' ')[1];
 	try {
-		const id = await Number(req.params.id);
-		await changeAppointment(id, token!, change);
-		res.status(200).json({ details: 'Turno cancelado con exito' });
+		const id = Number(req.params.id);
+		const result = await changeAppointment(id, token!, change);
+		res.status(200).json({ details: 'Turno cancelado con exito', result });
 	} catch (error) {
 		console.log('Error al cambiar el estado del turno', error);
 		res.status(404).json({

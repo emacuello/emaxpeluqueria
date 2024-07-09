@@ -59,9 +59,11 @@ const CreateAppointments = () => {
 				}
 			} catch (error) {
 				console.error(error);
+				localStorage.removeItem('token');
+				navigate('/');
 			}
 		}
-	}, [VITE_BASE_URL, dispatch, token, userGlobal]);
+	}, [VITE_BASE_URL, dispatch, navigate, token, userGlobal]);
 
 	const handleInputs = (event) => {
 		event.preventDefault();
@@ -91,10 +93,11 @@ const CreateAppointments = () => {
 					appointment,
 					config
 				);
+				console.log('LOG DEL DIA', response.data);
 				if (response.data) {
 					setAppointment(myAppointments);
 					console.log(response.data);
-					dispatch(addOneAppointments(response.data.result));
+					dispatch(addOneAppointments(response.data));
 					setSuccess({ estado: true });
 					setTimeout(() => {
 						setSuccess({ estado: undefined });

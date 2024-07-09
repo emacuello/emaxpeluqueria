@@ -5,6 +5,8 @@ const initialState = {
 	user: {},
 	userAppointments: {},
 	products: {},
+	cart: 0,
+	payments: {},
 };
 
 const loginCredentials = createSlice({
@@ -61,17 +63,41 @@ const productsSlice = createSlice({
 		},
 	},
 });
+const cartSlice = createSlice({
+	name: 'cart',
+	initialState,
+	reducers: {
+		addProduct: (state, action) => {
+			state.cart = state.cart + action.payload;
+		},
+		setCountCart: (state, action) => {
+			state.cart = action.payload;
+		},
+	},
+});
+
+const paymentsSlice = createSlice({
+	name: 'payments',
+	initialState,
+	reducers: {
+		addPayments: (state, action) => {
+			state.payments = action.payload;
+		},
+	},
+});
 
 const rootReducer = combineReducers({
 	user: loginCredentials.reducer,
 	appointments: appointmentsSlice.reducer,
 	products: productsSlice.reducer,
+	cart: cartSlice.reducer,
+	payments: paymentsSlice.reducer,
 });
 
 export const { addAppointments, changeAppointments, addOneAppointments } =
 	appointmentsSlice.actions;
 export const { addUser, userLogOut } = loginCredentials.actions;
-
+export const { addPayments } = paymentsSlice.actions;
 export const { addProducts } = productsSlice.actions;
-
+export const { addProduct, setCountCart } = cartSlice.actions;
 export default rootReducer;

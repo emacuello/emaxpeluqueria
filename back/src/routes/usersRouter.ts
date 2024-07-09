@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import {
+	changePassword,
+	deleteUser,
 	getUserById,
 	getUserEmail,
 	getUsers,
@@ -20,5 +22,7 @@ usersRouter.post('/register', verificationsUsersField, postUser); //✅
 usersRouter.post('/login', login); //✅
 usersRouter.post('/register/google', newUsergoogle); //✅
 usersRouter.put('/', updateUser); //✅
+usersRouter.put('/changePassword', changePassword); //✅
+usersRouter.delete('/', deleteUser);
 
 export default usersRouter;

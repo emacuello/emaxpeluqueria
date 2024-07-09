@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUser } from '../../redux/reducers';
 import axios from 'axios';
 import Spinner from 'react-bootstrap/Spinner';
+import MiniCart from '../minicart/MiniCart';
 
 const NavbarProfile = () => {
 	const [show, setShow] = useState(false);
@@ -42,21 +43,27 @@ const NavbarProfile = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			};
-			const axiosResponse = async () => {
-				const response = await axios(
-					`${VITE_BASE_URL}/users/token`,
-					config
-				);
-				console.log(response.data);
-				setUser(response.data);
-				dispatch(addUser(response.data));
-				setLoader(true);
-			};
-			if (token) {
-				axiosResponse();
+			try {
+				const axiosResponse = async () => {
+					const response = await axios(
+						`${VITE_BASE_URL}/users/token`,
+						config
+					);
+					console.log(response.data);
+					setUser(response.data);
+					dispatch(addUser(response.data));
+					setLoader(true);
+				};
+				if (token) {
+					axiosResponse();
+				}
+			} catch (error) {
+				console.log(error);
+				localStorage.removeItem('token');
+				navigate('/');
 			}
 		}
-	}, [user, dispatch, userGlobal, token, VITE_BASE_URL]);
+	}, [user, dispatch, userGlobal, token, VITE_BASE_URL, navigate]);
 	const logOut = () => {
 		localStorage.removeItem('token');
 
@@ -65,6 +72,7 @@ const NavbarProfile = () => {
 	return (
 		<>
 			<>
+				<MiniCart />
 				{!loader ? (
 					<Spinner animation="grow" />
 				) : (
