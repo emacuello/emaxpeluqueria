@@ -189,7 +189,7 @@ const Login = () => {
 									</button>
 									<a
 										onClick={handleGoogleLogin}
-										className={`${styles.btn} text-decoration-none p-2  text-center`}
+										className={`${styles.btn} ${styles.btnGoogle} text-decoration-none p-2  text-center`}
 									>
 										{loadingGoogle ? (
 											<>

@@ -47,7 +47,9 @@ label {
 	border: #0d0310;
 	color: #cc82e8;
 }
-
+.btnGoogle:hover {
+	cursor: pointer;
+}
 .input {
 	background-color: inherit !important;
 }

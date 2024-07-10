@@ -56,4 +56,10 @@ export const credentialsRepository = AppDataSource.getRepository(
 		if (newCredentials !== undefined) return credentials;
 		else throw Error('Error al cambiar las credenciales');
 	},
+	getAllUsernames: async function () {
+		const usernames = await this.find();
+		return usernames.map((username) => {
+			return username.username;
+		});
+	},
 });

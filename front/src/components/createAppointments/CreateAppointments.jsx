@@ -35,7 +35,6 @@ const CreateAppointments = () => {
 	useEffect(() => {
 		if (userGlobal.id) {
 			setUser(userGlobal);
-			dispatch(addAppointments(userGlobal));
 			return;
 		} else {
 			try {

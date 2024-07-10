@@ -15,9 +15,20 @@ import Aos from 'aos';
 const Register = () => {
 	const [loading, setLoading] = useState(false);
 	const [loadingGoogle, setLoadingGoogle] = useState(false);
+	const [notAvailable, setNotAvailable] = useState([]);
 
 	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
-
+	useEffect(() => {
+		try {
+			const axiosRequest = async () => {
+				const response = await axios(`${VITE_BASE_URL}/users/username`);
+				setNotAvailable(response.data);
+			};
+			axiosRequest();
+		} catch (error) {
+			console.log(error);
+		}
+	}, [VITE_BASE_URL]);
 	useEffect(() => {
 		Aos.init();
 	}, []);
@@ -38,8 +49,8 @@ const Register = () => {
 	const [validated, setValidated] = useState(false);
 	const [feedback, setFeedback] = useState({ display: 'none' });
 	useEffect(() => {
-		setError(validate(user));
-	}, [user]);
+		setError(validate(user, notAvailable));
+	}, [notAvailable, user]);
 
 	const pass = () => {
 		if (user.password === secondPass.password) {
@@ -69,7 +80,6 @@ const Register = () => {
 		event.preventDefault();
 		setLoading(true);
 		try {
-			console.log(user);
 			if (!validateFields(user) && pass()) {
 				user.nDni = Number(user.nDni);
 				await axios.post(`${VITE_BASE_URL}/auth/register`, user);
@@ -78,7 +88,7 @@ const Register = () => {
 				setValidated(true);
 				setTimeout(() => {
 					navigate('/login');
-				}, 1500);
+				}, 2500);
 			} else {
 				setShow({ estado: false });
 				timeOut();
@@ -102,6 +112,7 @@ const Register = () => {
 			}, 5000);
 		}
 	};
+
 	const googleLogin = () => {
 		setLoadingGoogle(true);
 		window.location.href = `${VITE_BASE_URL}/auth/google/login`;
@@ -174,20 +185,15 @@ const Register = () => {
 									onChange={handleInputChange}
 									isInvalid={error.username}
 									isValid={
-										user.username !== '' &&
-										!error.username &&
-										true
+										user.username !== '' && !error.username
 									}
 								/>
+								{user.username && (
+									<Form.Control.Feedback type="invalid">
+										{error.username}
+									</Form.Control.Feedback>
+								)}
 							</FloatingLabel>
-							{!user.username && (
-								<Form.Control.Feedback
-									style={feedback}
-									type="invalid"
-								>
-									Por favor, introduce tu username.
-								</Form.Control.Feedback>
-							)}
 						</Form.Group>
 					</Col>
 				</Row>
@@ -209,19 +215,14 @@ const Register = () => {
 									placeholder="Ingresa tu DNI"
 									onChange={handleInputChange}
 									isInvalid={error.nDni}
-									isValid={
-										user.nDni !== '' && !error.nDni && true
-									}
+									isValid={user.nDni !== '' && !error.nDni}
 								/>
+								{error.nDni && (
+									<Form.Control.Feedback type="invalid">
+										{error.nDni}
+									</Form.Control.Feedback>
+								)}
 							</FloatingLabel>
-							{!user.nDni && (
-								<Form.Control.Feedback
-									style={feedback}
-									type="invalid"
-								>
-									Por favor, introduce tu DNI.
-								</Form.Control.Feedback>
-							)}
 						</Form.Group>
 					</Col>
 					<Col md>
@@ -240,20 +241,16 @@ const Register = () => {
 									onChange={handleInputChange}
 									isInvalid={error.birthdate}
 									isValid={
-										user.birthdate !== '' &&
 										!error.birthdate &&
-										true
+										user.birthdate !== ''
 									}
 								/>
+								{error.birthdate && (
+									<Form.Control.Feedback type="invalid">
+										{error.birthdate}
+									</Form.Control.Feedback>
+								)}
 							</FloatingLabel>
-							{!user.birthdate && (
-								<Form.Control.Feedback
-									style={feedback}
-									type="invalid"
-								>
-									Por favor, introduce tu fecha de nacimiento.
-								</Form.Control.Feedback>
-							)}
 						</Form.Group>
 					</Col>
 				</Row>
@@ -272,14 +269,14 @@ const Register = () => {
 							placeholder="name@example.com"
 							onChange={handleInputChange}
 							isInvalid={error.email}
-							isValid={user.email !== '' && !error.email && true}
+							isValid={user.email !== '' && !error.email}
 						/>
+						{error.email && (
+							<Form.Control.Feedback type="invalid">
+								{error.email}
+							</Form.Control.Feedback>
+						)}
 					</FloatingLabel>
-					{!user.email && (
-						<Form.Control.Feedback style={feedback} type="invalid">
-							Por favor, introduce tu correo electrónico.
-						</Form.Control.Feedback>
-					)}
 				</Form.Group>
 
 				<Form.Group className="mb-3">

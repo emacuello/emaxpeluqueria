@@ -46,3 +46,13 @@ export const changeCredentials = async (
 		throw error;
 	}
 };
+
+export const getAllUsernames = async () => {
+	try {
+		const usernames = await credentialsRepository.getAllUsernames();
+		return usernames;
+	} catch (error) {
+		console.log('Error al obtener los nombres de usuario', error);
+		throw error;
+	}
+};

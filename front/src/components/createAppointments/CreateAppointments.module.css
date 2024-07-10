@@ -40,7 +40,7 @@
 }
 
 .inputs {
-	background-color: inherit;
+	background-color: hsla(284, 69%, 71%, 0.09) !important;
 	border-color: hsl(331, 69%, 32%, 30%);
 	font-weight: bold !important;
 }

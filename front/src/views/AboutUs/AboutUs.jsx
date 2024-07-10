@@ -1,3 +1,4 @@
+import Contacts from '../Contact/Contact';
 import Styles from './AboutUs.module.css';
 const AboutUs = () => {
 	return (
@@ -128,6 +129,7 @@ const AboutUs = () => {
 					</div>
 				</div>
 			</section>
+			<Contacts></Contacts>
 		</>
 	);
 };

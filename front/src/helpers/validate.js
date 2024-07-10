@@ -1,4 +1,4 @@
-export const validate = (inputs) => {
+export const validate = (inputs, notAvailable) => {
 	const errors = {};
 	const regexPass = new RegExp(
 		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.,_-])([A-Za-z\d$@$!%*?&.,_-]|[^ ]){8,15}$/
@@ -12,7 +12,7 @@ export const validate = (inputs) => {
 	const regexUsername = new RegExp(
 		/^(?=.*[a-zA-Z0-9])[a-zA-Z0-9!@#$%^&*()\-_+=.]{3,20}$/
 	);
-	const regexDni = new RegExp(/^\d{7,8}$/);
+	const regexDni = new RegExp(/^\d{5,10}$/);
 
 	if (inputs.password !== '' && !regexPass.test(inputs.password)) {
 		errors.password =
@@ -28,10 +28,54 @@ export const validate = (inputs) => {
 		errors.username = 'Por favor, introduce un username valido';
 	}
 	if (inputs.nDni !== '' && !regexDni.test(inputs.nDni)) {
-		errors.nDni = 'Por favor, introduce un dni valido';
+		errors.nDni =
+			'Por favor, introduce un dni valido, entre 5 y 10 caracteres';
 	}
-	if (inputs.birthdate !== '' && typeof inputs.birthdate !== 'string') {
-		errors.birthdate = 'Por favor, introduce una fecha valida';
+	if (inputs.birthdate !== '' && validateDate(inputs.birthdate)) {
+		errors.birthdate = inputs.birthdate + ' es una fecha no valida';
+	}
+
+	if (notAvailable) {
+		if (notAvailable.includes(inputs.username)) {
+			errors.username = 'El usuario ya existe, introduce otro';
+		}
+	}
+	return errors;
+};
+
+const validateDate = (date) => {
+	const currentDate = validateCurrentDate();
+	if (date > currentDate) return true;
+
+	return false;
+};
+export const validateSecurity = (inputs, notAvailable) => {
+	const errors = {};
+	const regexPass = new RegExp(
+		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.,_-])([A-Za-z\d$@$!%*?&.,_-]|[^ ]){8,15}$/
+	);
+	if (inputs.oldPassword !== '' && !regexPass.test(inputs.oldPassword)) {
+		errors.oldPassword =
+			'Por favor, comprueba que tu contraseña cuente con entre 8 y 15 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un caracter especial';
+	}
+	if (inputs.newPassword !== '' && !regexPass.test(inputs.newPassword)) {
+		errors.newPassword =
+			'Por favor, comprueba que tu contraseña cuente con entre 8 y 15 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un caracter especial';
+	}
+	if (
+		inputs.confirmPassword !== '' &&
+		!regexPass.test(inputs.confirmPassword)
+	) {
+		errors.confirmPassword =
+			'Por favor, comprueba que tu contraseña cuente con entre 8 y 15 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un caracter especial';
+	}
+	if (inputs.confirmPassword !== inputs.newPassword) {
+		errors.password = 'Las contraseñas no coinciden';
+	}
+	if (notAvailable) {
+		if (notAvailable.includes(inputs.username)) {
+			errors.username = 'El usuario ya existe, introduce otro';
+		}
 	}
 	return errors;
 };
@@ -50,12 +94,21 @@ export const validateLogin = (inputs) => {
 	if (!regexUsername.test(inputs.username)) {
 		errors.username = 'Por favor, introduce un username valido';
 	}
+
 	return errors;
 };
 
 export const validateFields = (user) => {
 	for (const key in user) {
 		if (!user[key]) {
+			return true;
+		}
+	}
+	return false;
+};
+export const validateFieldsErrors = (data) => {
+	for (const key in data) {
+		if (!data[key]) {
 			return true;
 		}
 	}

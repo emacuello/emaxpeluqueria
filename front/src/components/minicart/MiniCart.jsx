@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './MiniCart.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCountCart } from '../../redux/reducers';
 import useWindowSize from '../../hooks/useWindowsSize';
+import Badge from 'react-bootstrap/Badge';
 
 const MiniCart = () => {
-	const [products, setProducts] = useState(0);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const counter = useSelector((state) => state.cart.cart);
@@ -15,7 +15,6 @@ const MiniCart = () => {
 
 	useEffect(() => {
 		const products = JSON.parse(localStorage.getItem('product')) || [];
-		setProducts(products.length);
 		dispatch(setCountCart(products.length));
 	}, [dispatch]);
 
@@ -47,9 +46,12 @@ const MiniCart = () => {
 						</svg>
 						<i className="bi-cart-fill me-1"></i>
 						Carrito
-						<span className="badge text-white ms-1 rounded-pill">
-							{counter === 0 ? products : counter}
-						</span>
+						<Badge
+							className="ms-1 rounded-pill text-black"
+							bg="secondary"
+						>
+							{counter}
+						</Badge>
 					</button>
 				</div>
 			) : (
@@ -78,9 +80,12 @@ const MiniCart = () => {
 						</svg>
 						<i className="bi-cart-fill me-1"></i>
 						Carrito
-						<span className="badge text-white ms-1 rounded-pill">
+						<Badge
+							bg="secondary"
+							className="ms-1 rounded-pill text-black"
+						>
 							{counter}
-						</span>
+						</Badge>
 					</button>
 				</div>
 			)}

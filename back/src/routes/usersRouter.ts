@@ -4,6 +4,7 @@ import {
 	deleteUser,
 	getUserById,
 	getUserEmail,
+	getUsername,
 	getUsers,
 	getUserToken,
 	login,
@@ -17,6 +18,7 @@ const usersRouter = Router();
 usersRouter.get('/', getUsers); //✅
 usersRouter.get('/token', getUserToken);
 usersRouter.get('/mail', getUserEmail); //✅
+usersRouter.get('/username', getUsername);
 usersRouter.get('/:id', getUserById); //✅
 usersRouter.post('/register', verificationsUsersField, postUser); //✅
 usersRouter.post('/login', login); //✅

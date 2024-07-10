@@ -12,6 +12,7 @@ import {
 	putUser,
 } from '../services/userServices';
 import { HEADERS_TOKEN, LOGIN_REDIRECT } from '../config/envs';
+import { getAllUsernames } from '../services/credentialServices';
 
 export const getUsers = async (req: Request, res: Response) => {
 	const user = req.headers?.authorization;
@@ -198,6 +199,27 @@ export const deleteUser = async (req: Request, res: Response) => {
 		const token = jwt?.split(' ')[1];
 		if (!token) res.status(401).json({ message: 'No autorizado' });
 		const user = await deleteUserToken(token!);
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(400).json({
+			message: 'Error al borrar usuario',
+			detail: 'Los datos son incorrectos',
+		});
+	}
+};
+
+export const getUsername = async (req: Request, res: Response) => {
+	try {
+		const jwt = req.headers?.authorization;
+		console.log('JWT', jwt);
+
+		const token = jwt?.split(' ')[1];
+		if (!token) res.status(401).json({ message: 'No autorizado' });
+		console.log('TOKEN', token);
+
+		if (token !== HEADERS_TOKEN)
+			res.status(401).json({ message: 'No autorizado' });
+		const user = await getAllUsernames();
 		res.status(200).json(user);
 	} catch (error) {
 		res.status(400).json({

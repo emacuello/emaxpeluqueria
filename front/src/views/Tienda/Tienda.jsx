@@ -6,11 +6,18 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addProducts, setCountCart } from '../../redux/reducers';
 import Placeholder from 'react-bootstrap/Placeholder';
+import Toast from 'react-bootstrap/Toast';
 const Shops = () => {
 	const navigate = useNavigate();
 	const [products, setProducts] = useState(null);
 	const [loader, setLoader] = useState(false);
+	// eslint-disable-next-line no-unused-vars
 	const [cart, setCart] = useState([]);
+	const [messageToast, setMessageToast] = useState({
+		message: '',
+		product: '',
+	});
+	const [show, setShow] = useState(false);
 	const dispatch = useDispatch();
 	const productsState = useSelector((state) => state.products?.products);
 	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -19,6 +26,7 @@ const Shops = () => {
 		setCart(storedCart.cart);
 	}, []);
 	const addToCart = (product) => {
+		setShow(false);
 		const currentCart = JSON.parse(localStorage.getItem('product')) || [];
 		if (
 			currentCart?.some((productCart) => productCart._id === product._id)
@@ -35,6 +43,11 @@ const Shops = () => {
 		setCart(currentCart);
 		dispatch(setCountCart(currentCart.length));
 		localStorage.setItem('product', JSON.stringify(currentCart));
+		setMessageToast({
+			message: 'Producto agregado al carrito',
+			product: product.name,
+		});
+		setShow(true);
 	};
 
 	useEffect(() => {
@@ -64,7 +77,7 @@ const Shops = () => {
 		if (!product.offer) {
 			return (
 				<div className="col mb-5" key={idx}>
-					<div className="card h-100">
+					<div className={`${styles.bgMain} card h-100`}>
 						<img
 							className="card-img-top"
 							src={product.image[0]}
@@ -100,7 +113,7 @@ const Shops = () => {
 		} else {
 			return (
 				<div className="col mb-5" key={idx}>
-					<div className="card h-100">
+					<div className={`${styles.bgHeader} card h-100`}>
 						<div
 							className="badge bg-dark text-white position-absolute"
 							style={{
@@ -149,7 +162,7 @@ const Shops = () => {
 	}
 	return (
 		<>
-			<header className="bg-dark py-5">
+			<header className={`${styles.bgMain} py-5`}>
 				<div className="container px-4 px-lg-5 my-5">
 					<div className="text-center text-white">
 						<h1 className="display-4 fw-bolder">
@@ -201,6 +214,29 @@ const Shops = () => {
 						)}
 					</div>
 				</div>
+				<Toast
+					onClose={() => setShow(false)}
+					show={show}
+					delay={1500}
+					autohide
+					bg="success"
+					className="position-fixed bottom-50 start-50 translate-middle end-50 p-3 z-50"
+				>
+					<Toast.Header>
+						<img
+							src="holder.js/20x20?text=%20"
+							className="rounded me-2"
+							alt=""
+						/>
+						<strong className="me-auto">
+							{messageToast.message}
+						</strong>
+					</Toast.Header>
+					<Toast.Body>
+						El producto {messageToast.product} fue agregado al
+						carrito
+					</Toast.Body>
+				</Toast>
 			</section>
 		</>
 	);

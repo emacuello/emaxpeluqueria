@@ -8,12 +8,18 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
+import { validateFieldsErrors, validateSecurity } from '../../helpers/validate';
 function Security({ Styles, user }) {
 	const [token, setToken] = useState(null);
-	const [data, setData] = useState(null);
+	const [data, setData] = useState({
+		oldPassword: '',
+		newPassword: '',
+		confirmPassword: '',
+		username: '',
+	});
 	// eslint-disable-next-line no-unused-vars
 	const [userSocial, setUserSocial] = useState(false);
-	const [userServer, setUserServer] = useState(false);
+	const [userServer, setUserServer] = useState(null);
 	const [show, setShow] = useState(false);
 	const [show2, setShow2] = useState(false);
 	const [confirm, setConfirm] = useState(null);
@@ -22,6 +28,14 @@ function Security({ Styles, user }) {
 	const [errorUpdate, setErrorUpdate] = useState(null);
 	const [errorDelete, setErrorDelete] = useState(null);
 	const [showAlert1, setShowAlert] = useState(null);
+	const [error, setError] = useState({
+		oldPassword: '',
+		newPassword: '',
+		confirmPassword: '',
+		password: '',
+		username: '',
+	});
+	const [notAvailable, setNotAvailable] = useState([]);
 
 	const popover = (
 		<Popover id="popover-basic">
@@ -42,20 +56,49 @@ function Security({ Styles, user }) {
 		const currentToken = localStorage.getItem('token');
 		setToken(currentToken);
 	}, []);
+	useEffect(() => {
+		try {
+			const axiosRequest = async () => {
+				const response = await axios(`${VITE_BASE_URL}/users/username`);
+				setNotAvailable(response.data);
+			};
+			if (userServer === false) axiosRequest();
+		} catch (error) {
+			console.log(error);
+		}
+	}, [VITE_BASE_URL, userServer]);
 
+	useEffect(() => {
+		if (userServer) {
+			console.log('hola');
+			setError(validateSecurity(data));
+		} else {
+			console.log('ingreso?');
+			setError(validateSecurity(data, notAvailable));
+		}
+	}, [data, notAvailable, userServer]);
 	useEffect(() => {
 		if (user) {
 			setUserSocial(user.socialUser);
 			setUserServer(user.serverPrincipal);
 		}
-		console.log(userServer);
-	}, [user, userServer]);
+	}, [user]);
 	const handleChange = (event) => {
 		setData({
 			...data,
 			[event.target.name]: event.target.value,
 		});
 	};
+	const validatePass = (password) => {
+		if (data[password].length >= 8 && !error[password]) return true;
+		return false;
+	};
+	const validateUsername = (username) => {
+		if (data[username].length >= 2 && !error[username]) return true;
+		return false;
+	};
+	console.log(error);
+	console.log(notAvailable);
 	const handleSubmit = async (event) => {
 		setLoader(true);
 		event.preventDefault();
@@ -65,22 +108,35 @@ function Security({ Styles, user }) {
 				Authorization: `Bearer ${token}`,
 			},
 		};
-		try {
-			const response = await axios.put(
-				`${VITE_BASE_URL}/users/${user.id}`,
-				data,
-				config
-			);
-			if (response.data) {
-				setLoader(false);
-				setData(response.data);
-				setShowAlert('true');
+		if (validateFieldsErrors(error)) {
+			const newData = {
+				newPassword: data.newPassword,
+				confirmPassword: data.confirmPassword,
+			};
+			if (data.username) {
+				newData.username = data.username;
+			} else {
+				newData.oldPassword = data.oldPassword;
 			}
-		} catch (error) {
+			try {
+				const response = await axios.put(
+					`${VITE_BASE_URL}/users/${user.id}`,
+					newData,
+					config
+				);
+				if (response.data) {
+					setLoader(false);
+					setData(response.data);
+					setShowAlert('true');
+				}
+			} catch (error) {
+				setLoader(false);
+				console.log(error);
+				setErrorUpdate(error.data);
+				setShowAlert('false');
+			}
+		} else {
 			setLoader(false);
-			console.log(error);
-			setErrorUpdate(error.data);
-			setShowAlert('false');
 		}
 	};
 	const handleDelete = async (event) => {
@@ -92,13 +148,14 @@ function Security({ Styles, user }) {
 				Authorization: `Bearer ${token}`,
 			},
 		};
+
 		if (confirm === user.email) {
 			try {
 				const response = await axios.delete(
 					`${VITE_BASE_URL}/users`,
 					config
 				);
-				console.log(response.data);
+
 				if (response.data) {
 					setShow(false);
 					setLoaderDelete(false);
@@ -136,40 +193,71 @@ function Security({ Styles, user }) {
 					</div>
 					<div className={`${Styles.bgMain2} card-body`}>
 						<form onSubmit={handleSubmit}>
-							<div className="mb-3">
-								{!userServer ? (
+							<Form.Text muted>
+								Tu contraseña debe tener entre 8 y 15
+								caracteres, Al menos una letra minúscula, Al
+								menos una letra mayúscula, Al menos un dígito,
+								Al menos un carácter especial ( $, @, !, %, *,
+								?, &, ,, ., _ o -.) y Sin espacios en blanco al
+								principio o al final
+							</Form.Text>
+							<div className="mb-3 mt-3">
+								{userServer ? (
 									<>
 										<label
 											className="small mb-1"
-											htmlFor="currentPassword"
+											htmlFor="oldPassword"
 										>
 											Contraseña actual
 										</label>
-										<input
-											className="form-control"
-											id="currentPassword"
+
+										<Form.Control
+											required
 											type="password"
-											placeholder="Enter current password"
-											name="currentPassword"
+											value={data.oldPassword}
+											id="oldPassword"
+											name="oldPassword"
+											minLength={8}
+											maxLength={15}
+											placeholder="Ingrese tu contraseña actual"
 											onChange={handleChange}
+											isInvalid={error.oldPassword}
+											isValid={validatePass(
+												'oldPassword'
+											)}
 										/>
 									</>
 								) : (
 									<>
 										<label
 											className="small mb-1"
-											htmlFor="currentPassword"
+											htmlFor="username"
 										>
 											Username
 										</label>
-										<input
-											className="form-control"
-											id="currentPassword"
+
+										<Form.Control
+											required
 											type="text"
-											placeholder="Ingresa tu username"
+											value={data.username}
+											id="username"
 											name="username"
+											minLength={2}
+											placeholder="Ingresa tu nuevo username"
 											onChange={handleChange}
+											isInvalid={error.username}
+											isValid={validateUsername(
+												'username'
+											)}
 										/>
+										{error.username && (
+											<Form.Control.Feedback
+												type="invalid"
+												muted
+											>
+												{error.username}
+											</Form.Control.Feedback>
+										)}
 										<Form.Text id="usernameHelpBlock" muted>
 											Los usuarios de plataformas sociales
 											deben ingresar un username y una
@@ -188,15 +276,25 @@ function Security({ Styles, user }) {
 								>
 									Nueva contraseña
 								</label>
-								<input
-									className="form-control"
-									id="newPassword"
-									type="password"
-									placeholder="Enter new password"
-									name="newPassword"
+
+								<Form.Control
 									required
+									type="password"
+									value={data.newPassword}
+									id="newPassword"
+									name="newPassword"
+									minLength={8}
+									maxLength={15}
+									placeholder="Ingrese tu nueva contraseña"
 									onChange={handleChange}
+									isInvalid={error.newPassword}
+									isValid={validatePass('newPassword')}
 								/>
+								{error.newPassword && (
+									<Form.Control.Feedback type="invalid" muted>
+										{error.newPassword}
+									</Form.Control.Feedback>
+								)}
 							</div>
 							<div className="mb-3">
 								<label
@@ -205,23 +303,42 @@ function Security({ Styles, user }) {
 								>
 									Confirmar nueva contraseña
 								</label>
-								<input
-									className="form-control"
-									id="confirmPassword"
-									type="password"
+								<Form.Control
 									required
-									placeholder="Confirm new password"
+									type="password"
+									id="confirmPassword"
+									value={data.confirmPassword}
 									name="confirmPassword"
+									minLength={8}
+									maxLength={15}
+									placeholder="Confirme tu nueva contraseña"
 									onChange={handleChange}
+									isInvalid={error.confirmPassword}
+									isValid={validatePass('confirmPassword')}
 								/>
+								{error.confirmPassword && (
+									<Form.Control.Feedback type="invalid">
+										{error.confirmPassword}
+									</Form.Control.Feedback>
+								)}
+								{error.password && (
+									<Form.Control.Feedback type="invalid">
+										{error.password}
+									</Form.Control.Feedback>
+								)}
 							</div>
 							{loader ? (
 								<button className={Styles.btn} type="submit">
 									<Spinner animation="border" />
-									Actualizar
+									Actualizando...
 								</button>
 							) : (
-								<button className={Styles.btn} type="submit">
+								<button
+									className={Styles.btn}
+									type="submit"
+									disabled={validateFieldsErrors(error)}
+									title="Al darle click en actualizar, se guardaran los cambios"
+								>
 									Actualizar
 								</button>
 							)}
@@ -260,6 +377,7 @@ function Security({ Styles, user }) {
 							className="btn btn-danger text-white"
 							type="button"
 							onClick={handleShow}
+							title="Esta acción no es reversible, pienselo con cuidado"
 						>
 							Lo entiendo, eliminar cuenta
 						</button>

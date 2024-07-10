@@ -14,6 +14,8 @@ const Appointment = ({
 	description,
 	id,
 	cancelAppointments,
+	setCancelAppointment,
+	setShow2,
 }) => {
 	const [show, setShow] = useState(false);
 	const [alert, setAlert] = useState({ status: undefined });
@@ -49,11 +51,14 @@ const Appointment = ({
 					body,
 					config
 				);
+				console.log(response.data);
 				if (response.status === 200 || response.status === 201) {
 					setAlert({ status: true, message: response.data.details });
 					cancelAppointments(response.data.result.id);
 					handleClose();
 					setLoaderButton(false);
+					setCancelAppointment(response.data.result);
+					setShow2(true);
 				}
 			};
 			if (token) {
@@ -83,7 +88,7 @@ const Appointment = ({
 				<Accordion.Header>
 					El usuario {user} tiene un turno el dia {date} a las {time}
 				</Accordion.Header>
-				<Accordion.Body>
+				<Accordion.Body className={styles.accordionBody}>
 					<div className="row">
 						<div className={`${styles.description} col-6`}>
 							El usuario {user} solicita: {description}
@@ -102,14 +107,13 @@ const Appointment = ({
 				backdrop="static"
 				keyboard={false}
 			>
-				<Modal.Header closeButton>
+				<Modal.Header closeButton className={styles.modalBody}>
 					<Modal.Title>Seguro que quieres Cancelar?</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>
-					Estas seguro de querer cancelar el turno? Si lo cancelas,
-					tienes que volver a agendarlo!
+				<Modal.Body className={styles.modalBody}>
+					Si lo cancelas, tienes que volver a agendarlo!
 				</Modal.Body>
-				<Modal.Footer>
+				<Modal.Footer className={styles.modalBody}>
 					<button className={styles.btnClose} onClick={handleClose}>
 						Cerrar
 					</button>

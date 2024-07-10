@@ -1,0 +1,139 @@
+@media only screen and (max-width: 768px) {
+	.contact {
+		margin-bottom: 60px;
+	}
+}
+
+.contact input,
+.contact textarea {
+	background: rgb(33 40 50 / 15%);
+	border: 1px solid inherit;
+	border-radius: 3px;
+	box-shadow: none;
+	color: whitesmoke;
+	font-size: 16px;
+	padding: 10px;
+	width: 100%;
+	font-family: 'poppins', sans-serif;
+	padding-left: 30px;
+	transition: all 0.3s ease 0s;
+}
+.contact-area {
+	background-attachment: fixed;
+	background-size: cover;
+	background-position: center;
+}
+
+.contact input:focus,
+.contact textarea:focus {
+	background: inherit;
+	border: 1px solid #cc82e8;
+	color: white;
+	box-shadow: none;
+	outline: 2px solid none;
+}
+
+.form-control::placeholder {
+	color: #232434;
+	opacity: 1;
+}
+
+.btn-contact-bg {
+	border-radius: 30px;
+	color: #000000;
+	outline: medium none !important;
+	padding: 15px 27px;
+	text-transform: capitalize;
+	transition: all 0.3s ease 0s;
+	background: #7564e5;
+	font-family: 'poppins', sans-serif;
+	cursor: pointer;
+	width: 100%;
+	font-weight: bold;
+}
+
+.btn-contact-bg:hover,
+.btn-contact-bg:focus {
+	background: rgb(33 40 50 / 15%);
+	color: #fff;
+}
+
+.single_address {
+	overflow: hidden;
+	margin-bottom: 10px;
+	padding-left: 40px;
+}
+
+@media only screen and (max-width: 768px) {
+	.single_address {
+		padding-left: 0px;
+	}
+}
+
+.single_address i {
+	background: #f6f6f6;
+	color: #7564e5;
+	border-radius: 30px;
+	width: 60px;
+	height: 60px;
+	line-height: 60px;
+	text-align: center;
+	float: left;
+	margin-right: 14px;
+	font-size: 22px;
+	box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
+	margin-bottom: 20px;
+	transition: all 0.3s ease 0s;
+}
+
+.single_address:hover i {
+	background: #7564e5;
+	color: #fff;
+}
+.single_address:hover i svg {
+	fill: #fff;
+	transition: all 0.3s ease 0s;
+}
+
+.single_address h4 {
+	font-size: 18px;
+	margin-bottom: 0px;
+	overflow: hidden;
+	font-weight: 600;
+}
+
+.single_address p {
+	overflow: hidden;
+	margin-top: 5px;
+}
+
+.section-title h1 {
+	font-size: 44px;
+	font-weight: 500;
+	margin-top: 0;
+	position: relative;
+	text-transform: capitalize;
+	margin-bottom: 15px;
+}
+
+.section-title p {
+	padding: 0 10px;
+	width: 70%;
+	margin: auto;
+	letter-spacing: 1px;
+}
+
+.section-title {
+	margin-bottom: 60px;
+}
+
+.text-center {
+	text-align: center !important;
+}
+.title {
+	font-weight: bold;
+	color: #7564e5;
+}
+.btn-disabled {
+	cursor: not-allowed;
+}
