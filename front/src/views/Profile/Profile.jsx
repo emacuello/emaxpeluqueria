@@ -27,6 +27,7 @@ function Profile() {
 			setUser(currentUser);
 		}
 	}, [currentUser]);
+
 	useEffect(() => {
 		if (user === null) {
 			const config = {

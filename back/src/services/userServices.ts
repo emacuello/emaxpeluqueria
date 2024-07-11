@@ -157,6 +157,7 @@ export const newUserGoogle = async (payload: Partial<User>) => {
 export const changePass = async (token: string, body: IChangePassword) => {
 	try {
 		const user = jwt.verify(token, SECRET_KEY!) as JwtPayload;
+
 		if (!user) throw Error('Error al decodificar el token');
 		console.log(user);
 		const currentUser = await usersRepository.findOne({

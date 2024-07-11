@@ -149,9 +149,8 @@ const MyAppointments = () => {
 			</h2>
 			<Accordion className="mt-5 mb-5">
 				{loader ? (
-					!appointments?.length && cancelList(appointments).length ? (
-						<Alert variant="dark">No hay turnos cancelados</Alert>
-					) : (
+					appointments?.length > 0 &&
+					cancelList(appointments).length ? (
 						cancelList(appointments).map((items, index) => {
 							return (
 								<Accordion.Item
@@ -170,6 +169,8 @@ const MyAppointments = () => {
 								</Accordion.Item>
 							);
 						})
+					) : (
+						<Alert variant="dark">No hay turnos cancelados</Alert>
 					)
 				) : (
 					<div className="d-flex justify-content-center">

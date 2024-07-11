@@ -49,7 +49,7 @@ const validateDate = (date) => {
 
 	return false;
 };
-export const validateSecurity = (inputs, notAvailable) => {
+export const validateSecurity = (inputs) => {
 	const errors = {};
 	const regexPass = new RegExp(
 		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.,_-])([A-Za-z\d$@$!%*?&.,_-]|[^ ]){8,15}$/
@@ -69,13 +69,11 @@ export const validateSecurity = (inputs, notAvailable) => {
 		errors.confirmPassword =
 			'Por favor, comprueba que tu contraseña cuente con entre 8 y 15 caracteres, al menos una letra mayúscula, una letra minúscula, un número y un caracter especial';
 	}
-	if (inputs.confirmPassword !== inputs.newPassword) {
+	if (
+		inputs.confirmPassword !== '' &&
+		inputs.confirmPassword !== inputs.newPassword
+	) {
 		errors.password = 'Las contraseñas no coinciden';
-	}
-	if (notAvailable) {
-		if (notAvailable.includes(inputs.username)) {
-			errors.username = 'El usuario ya existe, introduce otro';
-		}
 	}
 	return errors;
 };
@@ -106,13 +104,23 @@ export const validateFields = (user) => {
 	}
 	return false;
 };
-export const validateFieldsErrors = (data) => {
-	for (const key in data) {
-		if (!data[key]) {
-			return true;
+export const validateFieldsErrors = (errors) => {
+	for (let key in errors) {
+		if (errors[key]) {
+			return false; // Si hay un campo con datos, retornar false
 		}
 	}
-	return false;
+	return true; // Si todos los campos están vacíos, retornar true
+};
+export const validateFieldsErrors2 = (data) => {
+	let error = true;
+	for (const key in data) {
+		if (!data[key]) {
+			console.log(Boolean(data[key]));
+			error = false;
+		}
+	}
+	return error;
 };
 
 const validateCurrentDate = () => {

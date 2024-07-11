@@ -5,10 +5,17 @@ import Carousel from 'react-bootstrap/Carousel';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCountCart } from '../../redux/reducers';
 import styles from './Product.module.css';
+import Toast from 'react-bootstrap/Toast';
 
 function Product() {
 	const [product, setProduct] = useState(null);
 	const [quantity, setQuantity] = useState(1);
+	const [show, setShow] = useState(false);
+	const [messageToast, setMessageToast] = useState({
+		message: '',
+		product: '',
+		quantity: '',
+	});
 	const dispatch = useDispatch();
 	const { id } = useParams();
 	const products = useSelector((state) => state.products?.products);
@@ -29,6 +36,7 @@ function Product() {
 		}
 	}, [product, id, products, VITE_BASE_URL]);
 	const addToCart = (product, quantity) => {
+		setShow(false);
 		const currentCart = JSON.parse(localStorage.getItem('product')) || [];
 		if (
 			currentCart?.some((productCart) => productCart._id === product._id)
@@ -50,6 +58,12 @@ function Product() {
 		localStorage.setItem('product', JSON.stringify(currentCart));
 
 		dispatch(setCountCart(currentCart.length));
+		setMessageToast({
+			message: 'Producto agregado al carrito',
+			product: product.name,
+			quantity: quantity,
+		});
+		setShow(true);
 	};
 
 	return (
@@ -117,6 +131,7 @@ function Product() {
 									className={`${styles.btn} flex-shrink-0`}
 									onClick={() => {
 										addToCart(product, quantity);
+										setQuantity(1);
 									}}
 									type="button"
 								>
@@ -130,6 +145,29 @@ function Product() {
 						</div>
 					</div>
 				</div>
+				<Toast
+					onClose={() => setShow(false)}
+					show={show}
+					delay={1500}
+					autohide
+					bg="success"
+					className="position-fixed bottom-50 start-50 translate-middle end-50 p-3 z-50"
+				>
+					<Toast.Header>
+						<img
+							src="holder.js/20x20?text=%20"
+							className="rounded me-2"
+							alt=""
+						/>
+						<strong className="me-auto">
+							{messageToast.message}
+						</strong>
+					</Toast.Header>
+					<Toast.Body>
+						Se agregaron {messageToast.quantity} unidades del
+						producto {messageToast.product} al carrito
+					</Toast.Body>
+				</Toast>
 			</section>
 		</>
 	);

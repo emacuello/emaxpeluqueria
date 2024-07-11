@@ -121,8 +121,9 @@ export const updateUser = async (req: Request, res: Response) => {
 	try {
 		const jwt = req.headers?.authorization;
 		const token = jwt?.split(' ')[1];
+		if (!token) res.status(401).json({ message: 'No autorizado' });
 		const data = req.body;
-		const update = putUser(token!, data);
+		const update = await putUser(token!, data);
 		res.status(200).json(update);
 	} catch (error) {
 		res.status(400).json({

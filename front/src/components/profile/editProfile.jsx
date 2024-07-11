@@ -3,6 +3,9 @@ import Aos from 'aos';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { addUser } from '../../redux/reducers';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+import Spinner from 'react-bootstrap/esm/Spinner';
 
 // eslint-disable-next-line react/prop-types
 const EditProfile = ({ user, Styles, VITE_BASE_URL, dispatch }) => {
@@ -10,10 +13,15 @@ const EditProfile = ({ user, Styles, VITE_BASE_URL, dispatch }) => {
 	const [file, setFile] = useState(null);
 	const [preview, setPreview] = useState(user.image);
 	const [token, setToken] = useState(null);
+	const [show2, setShow2] = useState(false);
+	const [errorUpdate, setErrorUpdate] = useState(null);
+	const [loader, setLoader] = useState(false);
 	const handleDeletePreview = () => {
 		setFile(null);
 		setPreview(user.image);
 	};
+	const handleClose2 = () => setShow2(false);
+	const handleShow2 = () => setShow2(true);
 
 	const handleImageUpload = (event) => {
 		setFile(event.target.files[0]);
@@ -32,6 +40,7 @@ const EditProfile = ({ user, Styles, VITE_BASE_URL, dispatch }) => {
 	}, []);
 
 	const handleSubmit = async (event) => {
+		setLoader(true);
 		event.preventDefault();
 		const data = new FormData();
 
@@ -45,7 +54,7 @@ const EditProfile = ({ user, Styles, VITE_BASE_URL, dispatch }) => {
 		if (file) {
 			data.append('file', file);
 		}
-
+		console.log(data);
 		const config = {
 			headers: {
 				'Content-Type': 'multipart/form-data',
@@ -60,12 +69,23 @@ const EditProfile = ({ user, Styles, VITE_BASE_URL, dispatch }) => {
 					config
 				);
 				if (response.data) {
-					console.log(response.data);
+					setLoader(false);
+
+					handleDeletePreview();
 					dispatch(addUser(response.data));
+					handleShow2();
+					const urlImage = response.data.image;
+
+					setPreview(urlImage);
 				}
 			} catch (error) {
+				setLoader(false);
 				console.log(error);
+				setErrorUpdate(error.response.data.message);
+				handleShow2();
 			}
+		} else {
+			console.log('No hay token');
 		}
 	};
 	return (
@@ -189,11 +209,11 @@ const EditProfile = ({ user, Styles, VITE_BASE_URL, dispatch }) => {
 											className="form-control"
 											id="inputBirthday"
 											type="text"
-											name="birthday"
+											name="birthdate"
 											placeholder="Enter your birthday"
 											value={
-												editUser?.birthday
-													? editUser?.birthday
+												editUser?.birthdate
+													? editUser?.birthdate
 													: '-'
 											}
 											onChange={handleChange}
@@ -201,11 +221,66 @@ const EditProfile = ({ user, Styles, VITE_BASE_URL, dispatch }) => {
 									</div>
 								</div>
 
-								<button className={Styles.btn} type="submit">
-									Guardar cambios
-								</button>
+								{loader ? (
+									<button
+										className={Styles.btn}
+										type="submit"
+									>
+										<Spinner
+											as="span"
+											animation="grow"
+											size="sm"
+											role="status"
+											aria-hidden="true"
+										/>
+										Cargando...
+									</button>
+								) : (
+									<button
+										className={Styles.btn}
+										type="submit"
+									>
+										Guardar cambios
+									</button>
+								)}
 							</form>
 						</div>
+						<Modal
+							show={show2}
+							onHide={handleClose2}
+							backdrop="static"
+							keyboard={false}
+						>
+							<Modal.Header className={Styles.bgHeader2}>
+								<Modal.Title>
+									{errorUpdate
+										? 'Error al actualizar la cuenta'
+										: 'Tu cuenta ha sido actualizada'}
+								</Modal.Title>
+							</Modal.Header>
+							<Modal.Body className={Styles.bgMain2}>
+								{errorUpdate
+									? { errorUpdate }
+									: 'Tu cuenta ha sido actualizada correctamente, por favor, verifica que todo sea correcto.'}
+							</Modal.Body>
+							<Modal.Footer className={Styles.bgMain2}>
+								{errorUpdate ? (
+									<Button
+										variant="danger"
+										onClick={handleClose2}
+									>
+										Lo entiendo 😞
+									</Button>
+								) : (
+									<Button
+										variant="sucess"
+										onClick={handleClose2}
+									>
+										Cerrar
+									</Button>
+								)}
+							</Modal.Footer>
+						</Modal>
 					</div>
 				</div>
 			</div>

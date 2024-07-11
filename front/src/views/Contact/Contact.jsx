@@ -20,8 +20,7 @@ const Contacts = () => {
 		setLoader(true);
 		e.preventDefault();
 		console.log(data);
-		handleShow();
-		if (data.some((value) => !value)) return;
+
 		const key = VITE_HEADERS_KEY;
 		const value = VITE_HEADERS_VALUE;
 		const config = {
@@ -31,13 +30,17 @@ const Contacts = () => {
 			},
 		};
 		try {
-			const response = await axios.post(`${VITE_FORM_URL}/contact`, {
-				name: data?.name,
-				email: data?.email,
-				subject: data?.subject,
-				message: data?.message,
-				config,
-			});
+			console.log(config);
+			const response = await axios.post(
+				`${VITE_FORM_URL}/contact`,
+				{
+					name: data?.name,
+					email: data?.email,
+					subject: data?.subject,
+					message: data?.message,
+				},
+				config
+			);
 			console.log(response);
 			setData(null);
 			setLoader(false);

@@ -46,29 +46,32 @@ function Payments({ Styles, token }) {
 					},
 				});
 
-				setPaymentData(response.data);
-				dispatch(addPayments(response.data));
-				setLoading(false);
-				const paidFilter = response.data.filter(
-					(payment) => payment.status === 'Abonado'
-				);
+				if (response.data && response.data.length > 0) {
+					setPaymentData(response.data);
+					dispatch(addPayments(response.data));
+					setLoading(false);
+					const paidFilter = response.data.filter(
+						(payment) => payment.status === 'Abonado'
+					);
 
-				const totalAmount = paidFilter.reduce(
-					(total, payment) => total + payment.price,
-					0
-				);
-				setTotal(`$ ${formatCurrency(totalAmount)}`);
-				setLastPayment(paidFilter[0].createdAt.toLocaleString());
+					const totalAmount = paidFilter.reduce(
+						(total, payment) => total + payment.price,
+						0
+					);
+					setTotal(`$ ${formatCurrency(totalAmount)}`);
+					setLastPayment(paidFilter[0]?.createdAt.toLocaleString());
+				} else {
+					setLoading(false);
+				}
 			} catch (error) {
 				console.log(error);
 			}
 		};
-
-		if (newToken) {
+		if (newToken && data.length === 0) {
 			fetchData();
 		}
 		Aos.init();
-	}, [VITE_BASE_URL, dispatch, newToken]);
+	}, [VITE_BASE_URL, data, dispatch, newToken]);
 
 	const paymentStatus = (payment, index) => {
 		if (payment.status === 'Pendiente') {
@@ -321,7 +324,7 @@ function Payments({ Styles, token }) {
 									<>
 										<Spinner animation="border"></Spinner>
 									</>
-								) : paymentData.length > 0 ? (
+								) : paymentData?.length > 0 ? (
 									paymentData?.map((payment, index) => {
 										return paymentStatus(payment, index);
 									})

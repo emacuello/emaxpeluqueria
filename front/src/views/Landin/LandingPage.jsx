@@ -85,7 +85,7 @@ const LandingPage = () => {
 				<div>
 					<LazyLoadImage
 						src="https://i.ibb.co/stDtVXC/Logo-Emax-Peluqueria-Actualizado.png"
-						alt=""
+						alt="Logo-Emax-Peluqueria-Actualizado"
 					/>
 				</div>
 			</div>
@@ -97,7 +97,7 @@ const LandingPage = () => {
 					>
 						En el corazón de nuestra peluquería reside una pasión
 						inquebrantable por realzar la belleza de cada cliente,
-						combinada con un compromiso inquebrantable con la
+						combinada con un compromiso in quebrantable con la
 						excelencia y la atención personalizada.
 					</div>
 					<div className="col-sm-6" data-aos="fade-left">
