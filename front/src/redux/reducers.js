@@ -31,7 +31,6 @@ const appointmentsSlice = createSlice({
 			};
 		},
 		addOneAppointments: (state, action) => {
-			console.log(state, action);
 			state.userAppointments.appointment.push(action.payload);
 		},
 		changeAppointments: (state, action) => {

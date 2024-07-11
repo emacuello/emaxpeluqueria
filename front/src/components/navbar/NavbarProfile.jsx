@@ -49,7 +49,7 @@ const NavbarProfile = () => {
 						`${VITE_BASE_URL}/users/token`,
 						config
 					);
-					console.log(response.data);
+
 					setUser(response.data);
 					dispatch(addUser(response.data));
 					setLoader(true);

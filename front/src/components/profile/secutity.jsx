@@ -114,7 +114,7 @@ function Security({ Styles, user }) {
 			} catch (error) {
 				setLoader(false);
 				console.log(error);
-				console.log(error);
+
 				setErrorUpdate(error.response.data.message);
 				setShowAlert('false');
 				showAlert();

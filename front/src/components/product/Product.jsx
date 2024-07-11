@@ -22,14 +22,13 @@ function Product() {
 	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
 	useEffect(() => {
-		console.log(products);
 		if (products[1]) {
 			const product = products.find((product) => product._id === id);
 			setProduct(product);
 		} else {
 			const axiosResponse = async () => {
 				const response = await axios(`${VITE_BASE_URL}/products/${id}`);
-				console.log(response.data);
+
 				if (response.data) setProduct(response.data);
 			};
 			if (product === null) axiosResponse();

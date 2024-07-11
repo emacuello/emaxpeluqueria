@@ -116,7 +116,6 @@ export const validateFieldsErrors2 = (data) => {
 	let error = true;
 	for (const key in data) {
 		if (!data[key]) {
-			console.log(Boolean(data[key]));
 			error = false;
 		}
 	}

@@ -19,7 +19,6 @@ const Contacts = () => {
 	const handleSubmit = async (e) => {
 		setLoader(true);
 		e.preventDefault();
-		console.log(data);
 
 		const key = VITE_HEADERS_KEY;
 		const value = VITE_HEADERS_VALUE;
@@ -30,7 +29,7 @@ const Contacts = () => {
 			},
 		};
 		try {
-			console.log(config);
+			// eslint-disable-next-line no-unused-vars
 			const response = await axios.post(
 				`${VITE_FORM_URL}/contact`,
 				{
@@ -41,7 +40,7 @@ const Contacts = () => {
 				},
 				config
 			);
-			console.log(response);
+
 			setData(null);
 			setLoader(false);
 			handleShow();

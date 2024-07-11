@@ -92,10 +92,10 @@ const CreateAppointments = () => {
 					appointment,
 					config
 				);
-				console.log('LOG DEL DIA', response.data);
+
 				if (response.data) {
 					setAppointment(myAppointments);
-					console.log(response.data);
+
 					dispatch(addOneAppointments(response.data));
 					setSuccess({ estado: true });
 					setTimeout(() => {

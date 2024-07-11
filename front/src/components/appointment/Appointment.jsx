@@ -51,7 +51,7 @@ const Appointment = ({
 					body,
 					config
 				);
-				console.log(response.data);
+
 				if (response.status === 200 || response.status === 201) {
 					setAlert({ status: true, message: response.data.details });
 					cancelAppointments(response.data.result.id);

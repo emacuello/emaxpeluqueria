@@ -37,7 +37,6 @@ const MyAppointments = () => {
 		(state) => state.appointments?.userAppointments
 	);
 	useEffect(() => {
-		console.log(userAppointments);
 		if (userAppointments['appointment']) {
 			setAppointments(userAppointments?.appointment);
 			setUser(userAppointments);
@@ -56,7 +55,7 @@ const MyAppointments = () => {
 						`${VITE_BASE_URL}/users/token`,
 						config
 					);
-					console.log(response);
+
 					setAppointments(response.data.appointment);
 					dispatch(addAppointments(response.data));
 					setUser(response.data);
@@ -83,9 +82,8 @@ const MyAppointments = () => {
 			if (item?.status === 'active') return item;
 		});
 	};
-	console.log(userAppointments);
+
 	const cancelAppointments = (id) => {
-		console.log(id);
 		dispatch(changeAppointments(id));
 		setAppointments((prevItems) =>
 			prevItems.map((x) => {

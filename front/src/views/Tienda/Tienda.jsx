@@ -51,7 +51,6 @@ const Shops = () => {
 	};
 
 	useEffect(() => {
-		console.log(productsState);
 		if (productsState[1]) {
 			setProducts(productsState);
 			setLoader(true);

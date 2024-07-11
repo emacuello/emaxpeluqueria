@@ -54,7 +54,7 @@ const EditProfile = ({ user, Styles, VITE_BASE_URL, dispatch }) => {
 		if (file) {
 			data.append('file', file);
 		}
-		console.log(data);
+
 		const config = {
 			headers: {
 				'Content-Type': 'multipart/form-data',

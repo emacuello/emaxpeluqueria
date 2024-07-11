@@ -20,7 +20,7 @@ const LandingPage = () => {
 			try {
 				const axiosResponse = async () => {
 					const response = await axios(`${VITE_BASE_URL}/products`);
-					console.log(response.data);
+
 					if (response.data) {
 						dispatch(addProducts(response.data));
 					}
