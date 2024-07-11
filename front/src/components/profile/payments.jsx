@@ -45,7 +45,6 @@ function Payments({ Styles, token }) {
 						Authorization: `Bearer ${newToken}`,
 					},
 				});
-
 				if (response.data && response.data.length > 0) {
 					setPaymentData(response.data);
 					dispatch(addPayments(response.data));
@@ -67,7 +66,7 @@ function Payments({ Styles, token }) {
 				console.log(error);
 			}
 		};
-		if (newToken && data.length === 0) {
+		if (newToken && !data?.length) {
 			fetchData();
 		}
 		Aos.init();
