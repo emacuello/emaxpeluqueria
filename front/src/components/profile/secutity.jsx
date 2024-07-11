@@ -349,7 +349,7 @@ function Security({ Styles, user }) {
 
 			<Modal show={show} onHide={handleClose}>
 				<Modal.Header className={Styles.bgHeader2} closeButton>
-					<Modal.Title>Modal heading</Modal.Title>
+					<Modal.Title>Confirme la eliminación</Modal.Title>
 				</Modal.Header>
 				<Modal.Body className={Styles.bgMain2}>
 					<Form>

@@ -7,7 +7,10 @@ const Contacts = () => {
 	const [show, setShow] = useState(false);
 	const [errorMessage, setErrorMessage] = useState(null);
 	const [loader, setLoader] = useState(false);
-	const handleClose = () => setShow(false);
+	const handleClose = () => {
+		setErrorMessage(null);
+		setShow(false);
+	};
 	const handleShow = () => setShow(true);
 	const VITE_FORM_URL = import.meta.env.VITE_FORM_URL;
 	const VITE_HEADERS_KEY = import.meta.env.VITE_HEADERS_KEY;
