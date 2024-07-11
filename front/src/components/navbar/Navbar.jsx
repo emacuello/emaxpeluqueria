@@ -38,7 +38,7 @@ const MyNavbar = () => {
 		<>
 			<Navbar expand="lg" className={`${styles.nav} sticky-top`}>
 				<Container>
-					<Navbar.Brand>
+					<Navbar.Brand href="/">
 						<NavbarBrand className="d-inline-block align-top"></NavbarBrand>
 					</Navbar.Brand>
 					<Navbar.Toggle aria-controls="basic-navbar-nav" />
