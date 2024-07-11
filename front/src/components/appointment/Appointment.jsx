@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from 'react-router-dom';
+import Spinner from 'react-bootstrap/Spinner';
 const Appointment = ({
 	date,
 	time,
@@ -13,11 +14,14 @@ const Appointment = ({
 	description,
 	id,
 	cancelAppointments,
+	setCancelAppointment,
+	setShow2,
 }) => {
 	const [show, setShow] = useState(false);
 	const [alert, setAlert] = useState({ status: undefined });
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const [loaderButton, setLoaderButton] = useState(false);
 	const [token, setToken] = useState(null);
 	const navigate = useNavigate();
 
@@ -31,6 +35,7 @@ const Appointment = ({
 	}, [navigate]);
 	const cancelAppointment = async () => {
 		try {
+			setLoaderButton(true);
 			const config = {
 				headers: {
 					'Content-Type': 'application/json',
@@ -42,14 +47,18 @@ const Appointment = ({
 			};
 			const axiosPut = async () => {
 				const response = await axios.put(
-					`${VITE_BASE_URL}/appointment/cancel/${id}`,
+					`${VITE_BASE_URL}/appointments/${id}`,
 					body,
 					config
 				);
-				if (response.status === 200) {
+
+				if (response.status === 200 || response.status === 201) {
 					setAlert({ status: true, message: response.data.details });
-					cancelAppointments(id);
+					cancelAppointments(response.data.result.id);
 					handleClose();
+					setLoaderButton(false);
+					setCancelAppointment(response.data.result);
+					setShow2(true);
 				}
 			};
 			if (token) {
@@ -59,6 +68,7 @@ const Appointment = ({
 			setAlert({ status: false, message: error.message });
 			console.error('Error al cancelar el turno', error);
 			handleClose();
+			setLoaderButton(false);
 		}
 	};
 
@@ -78,7 +88,7 @@ const Appointment = ({
 				<Accordion.Header>
 					El usuario {user} tiene un turno el dia {date} a las {time}
 				</Accordion.Header>
-				<Accordion.Body>
+				<Accordion.Body className={styles.accordionBody}>
 					<div className="row">
 						<div className={`${styles.description} col-6`}>
 							El usuario {user} solicita: {description}
@@ -97,20 +107,35 @@ const Appointment = ({
 				backdrop="static"
 				keyboard={false}
 			>
-				<Modal.Header closeButton>
+				<Modal.Header closeButton className={styles.modalBody}>
 					<Modal.Title>Seguro que quieres Cancelar?</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>
-					Estas seguro de querer cancelar el turno? Si lo cancelas,
-					tienes que volver a agendarlo!
+				<Modal.Body className={styles.modalBody}>
+					Si lo cancelas, tienes que volver a agendarlo!
 				</Modal.Body>
-				<Modal.Footer>
+				<Modal.Footer className={styles.modalBody}>
 					<button className={styles.btnClose} onClick={handleClose}>
 						Cerrar
 					</button>
-					<button className={styles.btn} onClick={cancelAppointment}>
-						Cancelar de todas formas
-					</button>
+					{loaderButton ? (
+						<button className={styles.btn} disabled>
+							<Spinner
+								as="span"
+								animation="grow"
+								size="sm"
+								role="status"
+								aria-hidden="true"
+							/>
+							Cancelando...
+						</button>
+					) : (
+						<button
+							className={styles.btn}
+							onClick={cancelAppointment}
+						>
+							Cancelar de todas formas
+						</button>
+					)}
 				</Modal.Footer>
 			</Modal>
 		</>

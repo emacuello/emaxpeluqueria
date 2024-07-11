@@ -15,7 +15,7 @@ const NavbarContent = () => {
 					Sobre nosotros
 				</Link>
 				<Link className={styles.a} to={'/services'}>
-					Servicios
+					Galeria
 				</Link>
 			</Nav>
 		</>

@@ -1,16 +1,25 @@
 import { Request, Response } from 'express';
 import {
+	changePass,
 	credentialCheck,
+	deleteUserToken,
 	getAllUsers,
 	getUser,
+	getUserByEmail,
 	getUserId,
+	newUserGoogle,
 	newUsers,
+	putUser,
 } from '../services/userServices';
-import { LOGIN_REDIRECT } from '../config/envs';
+import { HEADERS_TOKEN, LOGIN_REDIRECT } from '../config/envs';
+import { getAllUsernames } from '../services/credentialServices';
 
 export const getUsers = async (req: Request, res: Response) => {
+	const user = req.headers?.authorization;
+	if (!user) res.status(401).json({ message: 'No autorizado' });
+	const token = user?.split(' ')[1];
 	try {
-		const users = await getAllUsers();
+		const users = await getAllUsers(token as string);
 		res.status(200).json(users);
 	} catch (error) {
 		res.status(404).json({
@@ -22,9 +31,11 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUserToken = async (req: Request, res: Response) => {
 	const user = req.headers?.authorization;
+	console.log(user, 'user');
+
 	if (!user) res.status(401).json({ message: 'No autorizado' });
 	const token = user?.split(' ')[1];
-	console.log(token);
+	console.log(token, 'token');
 
 	try {
 		const user = await getUser(token!);
@@ -40,9 +51,11 @@ export const getUserById = async (req: Request, res: Response) => {
 	const user = req.headers?.authorization;
 	if (!user) res.status(401).json({ message: 'No autorizado' });
 	const token = user?.split(' ')[1];
+	if (token !== HEADERS_TOKEN)
+		res.status(401).json({ message: 'No autorizado' });
 	try {
 		const id: number = Number(req.params.id);
-		const userbyId = await getUserId(id, token!);
+		const userbyId = await getUserId(id);
 		if (userbyId === null || userbyId === undefined) {
 			throw new Error('Usuario no encontrado');
 		}
@@ -56,6 +69,11 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const postUser = async (req: Request, res: Response) => {
+	const user = req.headers?.authorization;
+	if (!user) res.status(401).json({ message: 'No autorizado' });
+	const token = user?.split(' ')[1];
+	if (token !== HEADERS_TOKEN)
+		res.status(401).json({ message: 'No autorizado' });
 	try {
 		const { name, email, password, birthdate, nDni, username } =
 			await req.body;
@@ -77,10 +95,16 @@ export const postUser = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
+	const user = req.headers?.authorization;
+	if (!user) res.status(401).json({ message: 'No autorizado' });
+	const token = user?.split(' ')[1];
+	if (token !== HEADERS_TOKEN)
+		res.status(401).json({ message: 'No autorizado' });
 	try {
 		const credenciales = await req.body;
-		const token = await credentialCheck(credenciales);
-		res.status(200).json({ login: true, token });
+
+		const { token, user } = await credentialCheck(credenciales);
+		res.status(200).json({ login: true, token, user });
 	} catch (error) {
 		res.status(400).json({
 			message: 'Error al iniciar sesion',
@@ -91,4 +115,117 @@ export const login = async (req: Request, res: Response) => {
 
 export const logout = async (req: Request, res: Response) => {
 	res.clearCookie('token').redirect(`${LOGIN_REDIRECT}`);
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+	try {
+		const jwt = req.headers?.authorization;
+		const token = jwt?.split(' ')[1];
+		if (!token) res.status(401).json({ message: 'No autorizado' });
+		const data = req.body;
+		const update = await putUser(token!, data);
+		res.status(200).json(update);
+	} catch (error) {
+		res.status(400).json({
+			message: 'Error al actualizar usuario',
+			detail: 'Los datos son incorrectos',
+		});
+	}
+};
+
+export const getUserEmail = async (req: Request, res: Response) => {
+	const user = req.headers?.authorization;
+	const email = req.headers?.email;
+	if (!user) res.status(401).json({ message: 'No autorizado' });
+	const token = user?.split(' ')[1];
+	if (token !== HEADERS_TOKEN)
+		res.status(401).json({ message: 'No autorizado' });
+	console.log('USER AUTH:', token);
+
+	if (!email)
+		res.status(400).json({ message: 'Los datos no fueron enviados' });
+	console.log('EMAIL:', email);
+	try {
+		const user = await getUserByEmail(email! as string);
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(404).json({
+			message: 'Error al ingresar los datos',
+			detail: 'Usuario no encontrado',
+		});
+	}
+};
+
+export const newUsergoogle = async (req: Request, res: Response) => {
+	try {
+		const { name, email, image } = req.body;
+		console.log('CONTROLLER', name, email, image);
+
+		const newUser = await newUserGoogle({
+			name,
+			email,
+			image,
+			socialUser: true,
+		});
+		res.status(201).json(newUser);
+	} catch (error) {
+		res.status(400).json({
+			meassage: 'Error al crear usuario',
+			detail: 'Los datos son incorrectos',
+		});
+	}
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+	try {
+		const jwt = req.headers?.authorization;
+		if (!jwt) res.status(401).json({ message: 'No autorizado' });
+		const token = jwt?.split(' ')[1];
+		if (!token) res.status(401).json({ message: 'No autorizado' });
+		const data = req.body;
+		const update = changePass(token!, data);
+		res.status(200).json(update);
+	} catch (error) {
+		res.status(400).json({
+			message: 'Error al actualizar usuario',
+			detail: 'Los datos son incorrectos',
+		});
+	}
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+	try {
+		const jwt = req.headers?.authorization;
+		if (!jwt) res.status(401).json({ message: 'No autorizado' });
+		const token = jwt?.split(' ')[1];
+		if (!token) res.status(401).json({ message: 'No autorizado' });
+		const user = await deleteUserToken(token!);
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(400).json({
+			message: 'Error al borrar usuario',
+			detail: 'Los datos son incorrectos',
+		});
+	}
+};
+
+export const getUsername = async (req: Request, res: Response) => {
+	try {
+		const jwt = req.headers?.authorization;
+		console.log('JWT', jwt);
+
+		const token = jwt?.split(' ')[1];
+		if (!token) res.status(401).json({ message: 'No autorizado' });
+		console.log('TOKEN', token);
+
+		if (token !== HEADERS_TOKEN)
+			res.status(401).json({ message: 'No autorizado' });
+		const user = await getAllUsernames();
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(400).json({
+			message: 'Error al borrar usuario',
+			detail: 'Los datos son incorrectos',
+		});
+	}
 };

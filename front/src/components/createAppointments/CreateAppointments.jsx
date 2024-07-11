@@ -7,51 +7,67 @@ import { validateAppointments } from '../../helpers/validate';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Form from 'react-bootstrap/Form';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	addAppointments,
+	addOneAppointments,
+	addUser,
+} from '../../redux/reducers';
 const CreateAppointments = () => {
-	const [id, SetId] = useState(null);
+	const [user, setUser] = useState(null);
 	const [appointment, setAppointment] = useState(myAppointments);
 	const [error, setError] = useState(myAppointments);
 	const [token, setToken] = useState('');
 	const [success, setSuccess] = useState({ estado: undefined });
 	const [loading, setLoading] = useState(false);
 	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const userGlobal = useSelector((state) => state.user.user);
 	useEffect(() => {
 		const userToken = localStorage.getItem('token');
 		if (!userToken) {
 			navigate('/');
 		}
-		console.log(userToken);
+
 		setToken(userToken);
-		console.log(token);
-	}, [navigate]);
+	}, [navigate, token]);
 	useEffect(() => {
-		try {
-			const config = {
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${token}`,
-				},
-			};
-			const axiosData = async () => {
-				const response = await axios.get(
-					`${VITE_BASE_URL}/users/token`,
-					config
-				);
-				SetId(response.data.id);
-			};
-			if (token) {
-				axiosData();
+		if (userGlobal.id) {
+			setUser(userGlobal);
+			return;
+		} else {
+			try {
+				const config = {
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const axiosData = async () => {
+					const response = await axios.get(
+						`${VITE_BASE_URL}/users/token`,
+						config
+					);
+					setUser(response.data);
+					dispatch(addAppointments(response.data));
+					dispatch(addUser(response.data));
+				};
+				if (token) {
+					axiosData();
+				}
+			} catch (error) {
+				console.error(error);
+				localStorage.removeItem('token');
+				navigate('/');
 			}
-		} catch (error) {
-			console.error(error);
 		}
-	}, [VITE_BASE_URL, token]);
+	}, [VITE_BASE_URL, dispatch, navigate, token, userGlobal]);
 
 	const handleInputs = (event) => {
 		event.preventDefault();
 		const { name, value } = event.target;
-		setAppointment({ ...appointment, [name]: value, userid: id });
+		setAppointment({ ...appointment, [name]: value, userid: user.id });
 	};
 	const validateInput = (name) => {
 		if (appointment[name] !== '') return 'is-valid';
@@ -71,17 +87,22 @@ const CreateAppointments = () => {
 						Authorization: `Bearer ${token}`,
 					},
 				};
-				await axios.post(
-					`${VITE_BASE_URL}/appointment/schedule`,
+				const response = await axios.post(
+					`${VITE_BASE_URL}/appointments`,
 					appointment,
 					config
 				);
-				setAppointment(myAppointments);
-				setSuccess({ estado: true });
-				setTimeout(() => {
-					setSuccess({ estado: undefined });
-				}, 8000);
-				setLoading(false);
+
+				if (response.data) {
+					setAppointment(myAppointments);
+
+					dispatch(addOneAppointments(response.data));
+					setSuccess({ estado: true });
+					setTimeout(() => {
+						setSuccess({ estado: undefined });
+					}, 8000);
+					setLoading(false);
+				}
 			} else {
 				setSuccess({ estado: false });
 				setLoading(false);

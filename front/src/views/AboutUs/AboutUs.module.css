@@ -1,0 +1,8 @@
+.fix-image {
+	width: 100%;
+	height: auto;
+	max-width: 456px;
+	max-height: 456px;
+	object-fit: cover;
+	border-radius: 10px;
+}

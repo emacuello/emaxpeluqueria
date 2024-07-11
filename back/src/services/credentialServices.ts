@@ -1,5 +1,7 @@
 import { ICredentialDtos } from '../dtos/ICredentialDtos';
+import { IChangePassword } from '../dtos/userDtos';
 import { Credential } from '../entities/credential';
+import { User } from '../entities/Users';
 import { credentialsRepository } from '../repository/credentialRepository';
 
 export const addCredential = async (credentialDto: ICredentialDtos) => {
@@ -24,6 +26,33 @@ export const checkCredential = async (credentialDtos: Credential) => {
 		else throw Error('Error al encontrar el usuario');
 	} catch (error) {
 		console.log('Eror al hacer el login', error);
+		throw error;
+	}
+};
+
+export const changeCredentials = async (
+	changePassword: IChangePassword,
+	currentUser: User
+) => {
+	try {
+		const credential = await credentialsRepository.changeCredentials(
+			changePassword,
+			currentUser
+		);
+		if (credential !== undefined) return credential;
+		else throw Error('Error al cambiar las credenciales');
+	} catch (error) {
+		console.log('Eror al camnbiar las credenciales', error);
+		throw error;
+	}
+};
+
+export const getAllUsernames = async () => {
+	try {
+		const usernames = await credentialsRepository.getAllUsernames();
+		return usernames;
+	} catch (error) {
+		console.log('Error al obtener los nombres de usuario', error);
 		throw error;
 	}
 };

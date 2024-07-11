@@ -1,0 +1,154 @@
+.title {
+	margin-bottom: 5vh;
+}
+.card {
+	margin: auto;
+	max-width: 950px;
+	width: 90%;
+	box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border-radius: 1rem;
+	border: transparent;
+}
+@media (max-width: 767px) {
+	.card {
+		margin: 3vh auto;
+	}
+}
+.cart {
+	background-color: hsla(284, 69%, 71%, 0.05);
+	padding: 4vh 5vh;
+	border-bottom-left-radius: 1rem;
+	border-top-left-radius: 1rem;
+}
+@media (max-width: 767px) {
+	.cart {
+		padding: 4vh;
+		border-bottom-left-radius: unset;
+		border-top-right-radius: 1rem;
+	}
+}
+.summary {
+	background-color: hsla(284, 69%, 71%, 0.05);
+	border-top-right-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+	padding: 4vh;
+	color: white;
+}
+@media (max-width: 767px) {
+	.summary {
+		border-top-right-radius: unset;
+		border-bottom-left-radius: 1rem;
+	}
+}
+.summary .col-2 {
+	padding: 0;
+}
+.summary .col-10 {
+	padding: 0;
+}
+.row {
+	margin: 0;
+}
+.title b {
+	font-size: 1.5rem;
+}
+.main {
+	margin: 0;
+	padding: 2vh 0;
+	width: 100%;
+}
+
+.col-2,
+.col {
+	padding: 0 1vh;
+}
+a {
+	padding: 0 1vh;
+}
+.close {
+	font-size: 0.7rem;
+}
+.x {
+	background-color: inherit;
+	color: white;
+}
+.x:hover {
+	cursor: pointer;
+}
+img {
+	width: 3.5rem;
+}
+.backtoshop {
+	margin-top: 4.5rem;
+}
+h5 {
+	margin-top: 4vh;
+}
+hr {
+	margin-top: 1.25rem;
+}
+form {
+	padding: 2vh 0;
+}
+select {
+	border: 1px solid rgba(0, 0, 0, 0.137);
+	padding: 1.5vh 1vh;
+	margin-bottom: 4vh;
+	outline: none;
+	width: 100%;
+	background-color: #0d0310;
+}
+input {
+	border: 1px solid rgba(0, 0, 0, 0.137);
+	padding: 1vh;
+	margin-bottom: 4vh;
+	outline: none;
+	width: 100%;
+	background-color: inherit;
+}
+input:focus::-webkit-input-placeholder {
+	color: transparent;
+}
+.btn {
+	background-color: hsl(331, 69%, 32%, 30%);
+	border-color: #000;
+	color: #cc82e8 !important;
+	width: 100%;
+	font-size: 0.7rem;
+	font-weight: bold;
+	margin-top: 4vh;
+	padding: 1vh;
+	border-radius: 10px;
+}
+.btn:focus {
+	box-shadow: none;
+	outline: none;
+	box-shadow: none;
+	color: white;
+	-webkit-box-shadow: none;
+	-webkit-user-select: none;
+	transition: none;
+}
+.btn:hover {
+	background-color: #0d0310 !important;
+	border: #0d0310 !important;
+	color: #cc82e8 !important;
+	transition: all 0.5s ease;
+	transform: scale(1.06);
+}
+a {
+	color: black;
+}
+.quantity {
+	text-decoration: none;
+	color: whitesmoke;
+	cursor: pointer;
+}
+a:hover {
+	color: #cc82e8;
+	text-decoration: none;
+}
+
+.linksvg {
+	text-decoration: none;
+}

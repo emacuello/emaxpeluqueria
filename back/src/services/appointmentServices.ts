@@ -6,8 +6,11 @@ import { appointmentsRepository } from '../repository/appointmentRepository';
 import { getUserId } from './userServices';
 import jwt from 'jsonwebtoken';
 
-export const getAllAppointments = async () => {
+export const getAllAppointments = async (token: string) => {
 	try {
+		const user = jwt.verify(token, SECRET_KEY!) as JwtPayload;
+		if (user.role !== 'admin')
+			throw Error('No estas autorizado para realizar esta accion');
 		const appointments = await appointmentsRepository.findAllAppointments();
 		return appointments;
 	} catch (error) {
@@ -18,9 +21,8 @@ export const getAllAppointments = async () => {
 
 export const getAppointmentbyId = async (id: number) => {
 	try {
-		const appointment = await appointmentsRepository.findAppointmentsbyId(
-			id
-		);
+		const appointment =
+			await appointmentsRepository.findAppointmentsbyId(id);
 		return appointment;
 	} catch (error) {
 		console.log('Error al encontrar en la base de datos', error);
@@ -39,14 +41,13 @@ export const createAppointment = async (
 			description: appointments.description,
 		};
 		const newAppointment = appointmentsRepository.create(appointment);
-		const userid = await getUserId(appointments.userid, token);
-		if (userid !== undefined) newAppointment.user = userid;
+		const user = await getUserId(appointments.userid, token);
+		if (user !== undefined) newAppointment.user = user;
 		else throw Error('Error al crear el turno');
-		const saveAppointment = await appointmentsRepository.save(
-			newAppointment
-		);
+		const saveAppointment =
+			await appointmentsRepository.save(newAppointment);
 		if (!appointment) throw Error('Error al crear el turno');
-		return saveAppointment;
+		return { appointment: saveAppointment, user };
 	} catch (error) {
 		console.log('Error al crear el turno', error);
 		throw error;
@@ -60,9 +61,8 @@ export const changeAppointment = async (
 ) => {
 	try {
 		const user = jwt.verify(token, SECRET_KEY!) as JwtPayload;
-		const appointment = await appointmentsRepository.findAppointmentsbyId(
-			id
-		);
+		const appointment =
+			await appointmentsRepository.findAppointmentsbyId(id);
 		if (appointment.user.email !== user?.aud) throw Error('No autorizado');
 		const appointmentChange = await appointmentsRepository.statusChanged(
 			id,

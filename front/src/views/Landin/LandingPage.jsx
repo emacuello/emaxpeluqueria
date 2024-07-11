@@ -4,10 +4,33 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import Aos from 'aos';
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { addProducts } from '../../redux/reducers';
 const LandingPage = () => {
+	const dispatch = useDispatch();
+	const products = useSelector((state) => state.products?.products);
+	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
+
 	useEffect(() => {
 		Aos.init();
-	}, []);
+		if (products[1]) {
+			return;
+		} else {
+			try {
+				const axiosResponse = async () => {
+					const response = await axios(`${VITE_BASE_URL}/products`);
+
+					if (response.data) {
+						dispatch(addProducts(response.data));
+					}
+				};
+				axiosResponse();
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	}, [VITE_BASE_URL, dispatch, products]);
 	return (
 		<>
 			<div className={styles.divContainer}>
@@ -62,7 +85,7 @@ const LandingPage = () => {
 				<div>
 					<LazyLoadImage
 						src="https://i.ibb.co/stDtVXC/Logo-Emax-Peluqueria-Actualizado.png"
-						alt=""
+						alt="Logo-Emax-Peluqueria-Actualizado"
 					/>
 				</div>
 			</div>
@@ -74,7 +97,7 @@ const LandingPage = () => {
 					>
 						En el corazón de nuestra peluquería reside una pasión
 						inquebrantable por realzar la belleza de cada cliente,
-						combinada con un compromiso inquebrantable con la
+						combinada con un compromiso in quebrantable con la
 						excelencia y la atención personalizada.
 					</div>
 					<div className="col-sm-6" data-aos="fade-left">

@@ -7,9 +7,11 @@ import NavbarProfile from './NavbarProfile';
 import NavbarContentLogin from './NavbarContentLogin';
 import styles from './Navbar.module.css';
 import { useEffect, useState } from 'react';
+import useWindowSize from '../../hooks/useWindowsSize';
 const MyNavbar = () => {
 	const [userLogin, setUserLogin] = useState(false);
-
+	const { width } = useWindowSize();
+	const breakpoint = 768;
 	useEffect(() => {
 		const userLogin = localStorage.getItem('token');
 		if (userLogin) {
@@ -45,8 +47,10 @@ const MyNavbar = () => {
 						id="basic-navbar-nav"
 					>
 						{NavbarContentCenter()}
+						{width < breakpoint && NavbarContentRight()}
 					</Navbar.Collapse>
-					{NavbarContentRight()}
+
+					{width > breakpoint && NavbarContentRight()}
 				</Container>
 			</Navbar>
 		</>

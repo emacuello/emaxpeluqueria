@@ -21,8 +21,11 @@ export const getAppointment = async (req: Request, res: Response) => {
 };
 
 export const getAppointments = async (req: Request, res: Response) => {
+	const user = req.headers?.authorization;
+	if (!user) res.status(401).json({ message: 'No autorizado' });
+	const token = user?.split(' ')[1];
 	try {
-		const result = await getAllAppointments();
+		const result = await getAllAppointments(token!);
 		res.status(200).json(result);
 		console.log('Turnos encontrados');
 	} catch (error) {
@@ -49,7 +52,7 @@ export const postAppointment = async (req: Request, res: Response) => {
 			token!
 		);
 		if (!result) throw Error('Error al crear el turno');
-		res.status(201).json({ details: 'Turno creado exitosamente' });
+		res.status(201).json({ details: 'Turno creado exitosamente', result });
 	} catch (error) {
 		res.status(400).json({
 			message: 'Error al crear el turno',
@@ -66,9 +69,9 @@ export const putAppointment = async (req: Request, res: Response) => {
 	if (!user) res.status(401).json({ message: 'No autorizado' });
 	const token = user?.split(' ')[1];
 	try {
-		const id = await Number(req.params.id);
-		await changeAppointment(id, token!, change);
-		res.status(200).json({ details: 'Turno cancelado con exito' });
+		const id = Number(req.params.id);
+		const result = await changeAppointment(id, token!, change);
+		res.status(200).json({ details: 'Turno cancelado con exito', result });
 	} catch (error) {
 		console.log('Error al cambiar el estado del turno', error);
 		res.status(404).json({

@@ -14,9 +14,21 @@ import { useNavigate } from 'react-router-dom';
 import Aos from 'aos';
 const Register = () => {
 	const [loading, setLoading] = useState(false);
+	const [loadingGoogle, setLoadingGoogle] = useState(false);
+	const [notAvailable, setNotAvailable] = useState([]);
 
 	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
-
+	useEffect(() => {
+		try {
+			const axiosRequest = async () => {
+				const response = await axios(`${VITE_BASE_URL}/users/username`);
+				setNotAvailable(response.data);
+			};
+			axiosRequest();
+		} catch (error) {
+			console.log(error);
+		}
+	}, [VITE_BASE_URL]);
 	useEffect(() => {
 		Aos.init();
 	}, []);
@@ -37,8 +49,8 @@ const Register = () => {
 	const [validated, setValidated] = useState(false);
 	const [feedback, setFeedback] = useState({ display: 'none' });
 	useEffect(() => {
-		setError(validate(user));
-	}, [user]);
+		setError(validate(user, notAvailable));
+	}, [notAvailable, user]);
 
 	const pass = () => {
 		if (user.password === secondPass.password) {
@@ -69,13 +81,14 @@ const Register = () => {
 		setLoading(true);
 		try {
 			if (!validateFields(user) && pass()) {
-				await axios.post(`${VITE_BASE_URL}/users/register`, user);
+				user.nDni = Number(user.nDni);
+				await axios.post(`${VITE_BASE_URL}/auth/register`, user);
 				setShow({ estado: true });
 				timeOut();
 				setValidated(true);
 				setTimeout(() => {
 					navigate('/login');
-				}, 1500);
+				}, 2500);
 			} else {
 				setShow({ estado: false });
 				timeOut();
@@ -98,6 +111,11 @@ const Register = () => {
 				setShow({ estado: undefined });
 			}, 5000);
 		}
+	};
+
+	const googleLogin = () => {
+		setLoadingGoogle(true);
+		window.location.href = `${VITE_BASE_URL}/auth/google/login`;
 	};
 	return (
 		<>
@@ -167,20 +185,15 @@ const Register = () => {
 									onChange={handleInputChange}
 									isInvalid={error.username}
 									isValid={
-										user.username !== '' &&
-										!error.username &&
-										true
+										user.username !== '' && !error.username
 									}
 								/>
+								{user.username && (
+									<Form.Control.Feedback type="invalid">
+										{error.username}
+									</Form.Control.Feedback>
+								)}
 							</FloatingLabel>
-							{!user.username && (
-								<Form.Control.Feedback
-									style={feedback}
-									type="invalid"
-								>
-									Por favor, introduce tu username.
-								</Form.Control.Feedback>
-							)}
 						</Form.Group>
 					</Col>
 				</Row>
@@ -202,19 +215,14 @@ const Register = () => {
 									placeholder="Ingresa tu DNI"
 									onChange={handleInputChange}
 									isInvalid={error.nDni}
-									isValid={
-										user.nDni !== '' && !error.nDni && true
-									}
+									isValid={user.nDni !== '' && !error.nDni}
 								/>
+								{error.nDni && (
+									<Form.Control.Feedback type="invalid">
+										{error.nDni}
+									</Form.Control.Feedback>
+								)}
 							</FloatingLabel>
-							{!user.nDni && (
-								<Form.Control.Feedback
-									style={feedback}
-									type="invalid"
-								>
-									Por favor, introduce tu DNI.
-								</Form.Control.Feedback>
-							)}
 						</Form.Group>
 					</Col>
 					<Col md>
@@ -233,20 +241,16 @@ const Register = () => {
 									onChange={handleInputChange}
 									isInvalid={error.birthdate}
 									isValid={
-										user.birthdate !== '' &&
 										!error.birthdate &&
-										true
+										user.birthdate !== ''
 									}
 								/>
+								{error.birthdate && (
+									<Form.Control.Feedback type="invalid">
+										{error.birthdate}
+									</Form.Control.Feedback>
+								)}
 							</FloatingLabel>
-							{!user.birthdate && (
-								<Form.Control.Feedback
-									style={feedback}
-									type="invalid"
-								>
-									Por favor, introduce tu fecha de nacimiento.
-								</Form.Control.Feedback>
-							)}
 						</Form.Group>
 					</Col>
 				</Row>
@@ -265,14 +269,14 @@ const Register = () => {
 							placeholder="name@example.com"
 							onChange={handleInputChange}
 							isInvalid={error.email}
-							isValid={user.email !== '' && !error.email && true}
+							isValid={user.email !== '' && !error.email}
 						/>
+						{error.email && (
+							<Form.Control.Feedback type="invalid">
+								{error.email}
+							</Form.Control.Feedback>
+						)}
 					</FloatingLabel>
-					{!user.email && (
-						<Form.Control.Feedback style={feedback} type="invalid">
-							Por favor, introduce tu correo electrónico.
-						</Form.Control.Feedback>
-					)}
 				</Form.Group>
 
 				<Form.Group className="mb-3">
@@ -350,28 +354,88 @@ const Register = () => {
 				</Form.Group>
 
 				{!loading ? (
-					<Button
-						onClick={postUsers}
-						className={`${styles.btn} w-100`}
-						type="submit"
-					>
-						Enviar
-					</Button>
+					<>
+						<Button
+							onClick={postUsers}
+							className={`${styles.btn} w-100`}
+							type="submit"
+						>
+							Enviar
+						</Button>
+						<Button
+							onClick={googleLogin}
+							className={`${styles.btn} w-100 mt-3`}
+						>
+							{loadingGoogle ? (
+								<>
+									<Spinner
+										as="span"
+										animation="grow"
+										size="sm"
+										role="status"
+										aria-hidden="true"
+									/>
+									Registrando con...
+								</>
+							) : (
+								`Registrarme con Google ${'   '}${' '}`
+							)}
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="#cc82e8"
+								className="icon icon-tabler icons-tabler-filled icon-tabler-brand-google "
+							>
+								<path
+									stroke="none"
+									d="M0 0h24v24H0z"
+									fill="none"
+								/>
+								<path d="M12 2a9.96 9.96 0 0 1 6.29 2.226a1 1 0 0 1 .04 1.52l-1.51 1.362a1 1 0 0 1 -1.265 .06a6 6 0 1 0 2.103 6.836l.001 -.004h-3.66a1 1 0 0 1 -.992 -.883l-.007 -.117v-2a1 1 0 0 1 1 -1h6.945a1 1 0 0 1 .994 .89c.04 .367 .061 .737 .061 1.11c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10z" />
+							</svg>
+						</Button>
+					</>
 				) : (
-					<Button
-						disabled
-						className={`${styles.btn} w-100`}
-						type="submit"
-					>
-						<Spinner
-							as="span"
-							animation="grow"
-							size="sm"
-							role="status"
-							aria-hidden="true"
-						/>
-						Registrando...
-					</Button>
+					<>
+						<Button
+							disabled={true}
+							className={`${styles.btn} w-100`}
+							type="submit"
+						>
+							<Spinner
+								as="span"
+								animation="grow"
+								size="sm"
+								role="status"
+								aria-hidden="true"
+							/>
+							Registrando...
+						</Button>
+						<Button
+							disabled={true}
+							className={`${styles.btn} w-100 mt-3`}
+							type="submit"
+						>
+							Registrarme con Google{' '}
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								width="20"
+								height="20"
+								viewBox="0 0 24 24"
+								fill="#cc82e8"
+								className="icon icon-tabler icons-tabler-filled icon-tabler-brand-google "
+							>
+								<path
+									stroke="none"
+									d="M0 0h24v24H0z"
+									fill="none"
+								/>
+								<path d="M12 2a9.96 9.96 0 0 1 6.29 2.226a1 1 0 0 1 .04 1.52l-1.51 1.362a1 1 0 0 1 -1.265 .06a6 6 0 1 0 2.103 6.836l.001 -.004h-3.66a1 1 0 0 1 -.992 -.883l-.007 -.117v-2a1 1 0 0 1 1 -1h6.945a1 1 0 0 1 .994 .89c.04 .367 .061 .737 .061 1.11c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10z" />
+							</svg>
+						</Button>
+					</>
 				)}
 				{show.estado === true ? (
 					<Alert className="container mt-3" variant="success">

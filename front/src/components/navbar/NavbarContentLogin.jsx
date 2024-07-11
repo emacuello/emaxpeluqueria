@@ -11,8 +11,8 @@ const NavbarContentLogin = () => {
 				<Link className={styles.a} to={'/myappointments'}>
 					Mis turnos
 				</Link>
-				<Link className={styles.a} to={'/locals'}>
-					Salones
+				<Link className={styles.a} to={'/shops'}>
+					Tienda
 				</Link>
 				<Link className={styles.a} to={'/contacts'}>
 					Contacto

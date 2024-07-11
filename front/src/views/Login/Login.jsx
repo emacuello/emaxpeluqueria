@@ -12,6 +12,7 @@ import { addUser } from '../../redux/reducers';
 import Aos from 'aos';
 const Login = () => {
 	const [loading, setLoading] = useState(false);
+	const [loadingGoogle, setLoadingGoogle] = useState(false);
 	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 	const navigate = useNavigate();
 	useEffect(() => {
@@ -49,10 +50,10 @@ const Login = () => {
 		try {
 			if (!validateFields(LoginData)) {
 				const response = await axios.post(
-					`${VITE_BASE_URL}/users/login`,
+					`${VITE_BASE_URL}/auth/login`,
 					LoginData
 				);
-				dispatch(addUser(response.data));
+				dispatch(addUser(response.data.user));
 				localStorage.setItem('token', response.data.token);
 				setShowAlert({ estado: true });
 				setValidateForm(true);
@@ -102,6 +103,10 @@ const Login = () => {
 				setValidateForm(false);
 			}, 5000);
 		}
+	};
+	const handleGoogleLogin = () => {
+		setLoadingGoogle(true);
+		window.location.href = `${VITE_BASE_URL}/auth/google/login`;
 	};
 	return (
 		<div className={`${styles.login}`}>
@@ -174,24 +179,87 @@ const Login = () => {
 						</div>
 						<div className="d-grid gap-2 mt-3">
 							{!loading ? (
-								<button
-									onClick={handleSubmit}
-									type="submit"
-									className={styles.btn}
-								>
-									Ingresar
-								</button>
+								<>
+									<button
+										onClick={handleSubmit}
+										type="submit"
+										className={styles.btn}
+									>
+										Ingresar
+									</button>
+									<a
+										onClick={handleGoogleLogin}
+										className={`${styles.btn} ${styles.btnGoogle} text-decoration-none p-2  text-center`}
+									>
+										{loadingGoogle ? (
+											<>
+												<Spinner
+													as="span"
+													animation="grow"
+													size="sm"
+													role="status"
+													aria-hidden="true"
+												/>
+												Ingresando con...
+											</>
+										) : (
+											`Ingresar con Google ${'   '}${' '}`
+										)}
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="20"
+											height="20"
+											viewBox="0 0 24 24"
+											fill="#cc82e8"
+											className="icon icon-tabler icons-tabler-filled icon-tabler-brand-google "
+										>
+											<path
+												stroke="none"
+												d="M0 0h24v24H0z"
+												fill="none"
+											/>
+											<path d="M12 2a9.96 9.96 0 0 1 6.29 2.226a1 1 0 0 1 .04 1.52l-1.51 1.362a1 1 0 0 1 -1.265 .06a6 6 0 1 0 2.103 6.836l.001 -.004h-3.66a1 1 0 0 1 -.992 -.883l-.007 -.117v-2a1 1 0 0 1 1 -1h6.945a1 1 0 0 1 .994 .89c.04 .367 .061 .737 .061 1.11c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10z" />
+										</svg>
+									</a>
+								</>
 							) : (
-								<button className={styles.btn} disabled>
-									<Spinner
-										as="span"
-										animation="grow"
-										size="sm"
-										role="status"
-										aria-hidden="true"
-									/>
-									Ingresando ..
-								</button>
+								<>
+									<button
+										className={styles.btn}
+										disabled={true}
+									>
+										<Spinner
+											as="span"
+											animation="grow"
+											size="sm"
+											role="status"
+											aria-hidden="true"
+										/>
+										Ingresando ..
+									</button>
+									<button
+										disabled={true}
+										type="submit"
+										className={styles.btn}
+									>
+										Ingresar con Google {'   '}{' '}
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="20"
+											height="20"
+											viewBox="0 0 24 24"
+											fill="#cc82e8"
+											className="icon icon-tabler icons-tabler-filled icon-tabler-brand-google "
+										>
+											<path
+												stroke="none"
+												d="M0 0h24v24H0z"
+												fill="none"
+											/>
+											<path d="M12 2a9.96 9.96 0 0 1 6.29 2.226a1 1 0 0 1 .04 1.52l-1.51 1.362a1 1 0 0 1 -1.265 .06a6 6 0 1 0 2.103 6.836l.001 -.004h-3.66a1 1 0 0 1 -.992 -.883l-.007 -.117v-2a1 1 0 0 1 1 -1h6.945a1 1 0 0 1 .994 .89c.04 .367 .061 .737 .061 1.11c0 5.523 -4.477 10 -10 10s-10 -4.477 -10 -10s4.477 -10 10 -10z" />
+										</svg>
+									</button>
+								</>
 							)}
 						</div>
 						<p className="forgot-password text-right mt-2">

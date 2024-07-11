@@ -1,0 +1,22 @@
+.btn {
+	background-color: hsl(331, 69%, 32%, 30%);
+	border: #cc82e8 !important;
+	color: #cc82e8 !important;
+	border-radius: 10px !important;
+	text-wrap: wrap !important;
+	transition: all 0.5s ease;
+	font-weight: bold !important;
+	padding: 0.4rem !important;
+}
+
+.btn:hover {
+	background-color: #0d0310 !important;
+	border: #0d0310 !important;
+	color: #cc82e8 !important;
+	transition: all 0.5s ease;
+	transform: scale(1.06);
+}
+
+.btn::after {
+	transition: all 0.5s ease;
+}

@@ -1,15 +1,69 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './NavbarProfile.module.css';
 import Image from 'react-bootstrap/Image';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser } from '../../redux/reducers';
+import axios from 'axios';
+import Spinner from 'react-bootstrap/Spinner';
+import MiniCart from '../minicart/MiniCart';
+
 const NavbarProfile = () => {
 	const [show, setShow] = useState(false);
+	const [user, setUser] = useState(null);
+	const [token, setToken] = useState(null);
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const dispatch = useDispatch();
+	const userGlobal = useSelector((state) => state.user.user);
+	const [loader, setLoader] = useState(false);
+	const navigate = useNavigate();
+	const VITE_BASE_URL = import.meta.env.VITE_BASE_URL;
 
+	useEffect(() => {
+		const userToken = localStorage.getItem('token');
+		if (!userToken) {
+			navigate('/');
+		}
+		setToken(userToken);
+	}, [navigate, token]);
+
+	useEffect(() => {
+		if (userGlobal.id) {
+			setUser(userGlobal);
+			setLoader(true);
+			return;
+		} else {
+			const config = {
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${token}`,
+				},
+			};
+			try {
+				const axiosResponse = async () => {
+					const response = await axios(
+						`${VITE_BASE_URL}/users/token`,
+						config
+					);
+
+					setUser(response.data);
+					dispatch(addUser(response.data));
+					setLoader(true);
+				};
+				if (token) {
+					axiosResponse();
+				}
+			} catch (error) {
+				console.log(error);
+				localStorage.removeItem('token');
+				navigate('/');
+			}
+		}
+	}, [user, dispatch, userGlobal, token, VITE_BASE_URL, navigate]);
 	const logOut = () => {
 		localStorage.removeItem('token');
 
@@ -18,41 +72,54 @@ const NavbarProfile = () => {
 	return (
 		<>
 			<>
-				<Dropdown className={styles.newbg}>
-					<Dropdown.Toggle>
-						<Image
-							className={styles.img}
-							src="https://i.ibb.co/8Ns4z0t/user-center-5-128.png"
-							alt="userProfile"
-						/>
-					</Dropdown.Toggle>
-					<Dropdown.Menu className={styles.dropdown}>
-						<Dropdown.Item>
-							<div>
-								<Link className={styles.a} to={'/profile'}>
-									Mi perfil
-								</Link>
-							</div>
-						</Dropdown.Item>
-						<Dropdown.Item>
-							<div>
-								<Link
-									className={styles.a}
-									to={'/myappointments'}
-								>
-									Mis turnos
-								</Link>
-							</div>
-						</Dropdown.Item>
-						<Dropdown.Item>
-							<div>
-								<Link className={styles.a} onClick={handleShow}>
-									Logout
-								</Link>
-							</div>
-						</Dropdown.Item>
-					</Dropdown.Menu>
-				</Dropdown>
+				<MiniCart />
+				{!loader ? (
+					<Spinner animation="grow" />
+				) : (
+					user.image && (
+						<Dropdown className={styles.newbg}>
+							<Dropdown.Toggle>
+								<Image
+									className={styles.img}
+									src={user.image}
+									alt="userProfile"
+								/>
+							</Dropdown.Toggle>
+							<Dropdown.Menu className={styles.dropdown}>
+								<Dropdown.Item>
+									<div>
+										<Link
+											className={styles.a}
+											to={'/profile'}
+										>
+											Mi perfil
+										</Link>
+									</div>
+								</Dropdown.Item>
+								<Dropdown.Item>
+									<div>
+										<Link
+											className={styles.a}
+											to={'/myappointments'}
+										>
+											Mis turnos
+										</Link>
+									</div>
+								</Dropdown.Item>
+								<Dropdown.Item>
+									<div>
+										<Link
+											className={styles.a}
+											onClick={handleShow}
+										>
+											Logout
+										</Link>
+									</div>
+								</Dropdown.Item>
+							</Dropdown.Menu>
+						</Dropdown>
+					)
+				)}
 			</>
 			<Modal
 				show={show}
