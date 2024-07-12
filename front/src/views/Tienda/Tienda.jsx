@@ -71,7 +71,9 @@ const Shops = () => {
 			}
 		}
 	}, [VITE_BASE_URL, dispatch, products, productsState]);
-
+	const formatCurrency = (num) => {
+		return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+	};
 	function isOffer(product, idx) {
 		if (!product.offer) {
 			return (
@@ -85,7 +87,7 @@ const Shops = () => {
 						<div className="card-body p-4">
 							<div className="text-center">
 								<h5 className="fw-bolder">{product.name}</h5>
-								{`$ ${product.price}`}
+								{`$ ${formatCurrency(product?.price)}`}
 							</div>
 						</div>
 						<div className="card-footer p-4 pt-0 border-top-0 bg-transparent">
@@ -131,9 +133,9 @@ const Shops = () => {
 							<div className="text-center">
 								<h5 className="fw-bolder">{product.name}</h5>
 								<span className="text-muted text-decoration-line-through">
-									{`$ ${product.price}`}
+									{`$ ${formatCurrency(product?.price)}`}
 								</span>
-								{`$ ${product.offerprice}`}
+								{`$ ${formatCurrency(product?.offerprice)}`}
 							</div>
 						</div>
 						<div className="card-footer p-4 pt-0 border-top-0 bg-transparent">

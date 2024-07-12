@@ -64,7 +64,9 @@ function Product() {
 		});
 		setShow(true);
 	};
-
+	const formatCurrency = (num) => {
+		return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+	};
 	return (
 		<>
 			<section className="py-5">
@@ -97,15 +99,19 @@ function Product() {
 							<div className="fs-5 mb-5">
 								{product?.offer ? (
 									<span className="text-decoration-line-through">
-										$ {product?.price}
+										$ {formatCurrency(product?.price)}
 									</span>
 								) : (
 									''
 								)}
 								{!product?.offer ? (
-									<span>{`$ ${product?.price}`}</span>
+									<span>{`$ ${formatCurrency(
+										product?.price
+									)}`}</span>
 								) : (
-									<span>{`$ ${product?.offerprice}`}</span>
+									<span>{`$ ${formatCurrency(
+										product?.offerprice
+									)}`}</span>
 								)}
 							</div>
 							<p className="lead">{product?.description}</p>

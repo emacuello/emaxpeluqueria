@@ -308,13 +308,13 @@ function Payments({ Styles, token }) {
 										Transaction ID
 									</th>
 									<th className="border-gray-200" scope="col">
-										Date
+										Fecha
 									</th>
 									<th className="border-gray-200" scope="col">
-										Amount
+										Monto
 									</th>
 									<th className="border-gray-200" scope="col">
-										Status
+										Estado del pago
 									</th>
 								</tr>
 							</thead>
