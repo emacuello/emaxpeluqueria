@@ -20,9 +20,9 @@ El proyecto está completamente bajo el entorno de Node.js. Se usaron los framew
 
 # Microservicio de Auth, Users y Appointments
 
-## Config de Api Gateway
+## Config de Microservicio de Auth, Users y Appointments
 
-Para probar el Api Gateway es necesario crear un `.env` en la raíz del proyecto que tengan estos valores:
+Para probar el Microservicio de Auth, Users y Appointments es necesario crear un `.env` en la raíz del proyecto que tengan estos valores:
 
 -   PORT = 1234
 -   DB_PASSWORD = 'example'
@@ -40,7 +40,9 @@ El microservicio está creado en Express.Js con TypeScript. Se encarga de la cre
 
 # Emax Peluqueria Frontend
 
-Para probar el Api Gateway es necesario crear un `.env` en la raíz del proyecto que tengan estos valores:
+## Config de Emax Peluqueria Frontend
+
+Para probar Emax Peluqueria Frontend es necesario crear un `.env` en la raíz del proyecto que tengan estos valores:
 
 -   VITE_BASE_URL= www.google.com **Es la conexion con el Api Gateway**
 -   VITE_FORM_URL= www.google.com **Es una url especial en donde se envian los emails, es un backend en nesjs donde recibe y procesa los datos y me llegan los emails a mi correo personal, el repositorio del servidor por el momento lo tengo privado**
