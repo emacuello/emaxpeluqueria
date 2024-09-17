@@ -14,3 +14,4 @@ export const PORT_REDIS = process.env.PORT_REDIS;
 export const USERNAME_REDIS = process.env.USERNAME_REDIS;
 export const PASSWORD_REDIS = process.env.PASSWORD_REDIS;
 export const HEADERS_TOKEN = process.env.HEADERS_TOKEN;
+export const DATABASE_URL = process.env.DATABASE_URL;
